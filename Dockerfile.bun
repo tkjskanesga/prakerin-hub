@@ -1,0 +1,49 @@
+# |-------[ WARNING FOR INFORMATION ]--------|
+# |  Docker File For Build Image Container   |
+# |------------------------------------------|
+FROM oven/bun:1.3.4-alpine AS base
+
+# |------------------------------------------|
+# | Stage 1 : Install All Depedency          |
+# | Install all depedency from package.json  |
+# |------------------------------------------|
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY package.json ./
+RUN bun ci
+
+# |------------------------------------------|
+# | Stage 2 : Building Application           |
+# | Copy all file for building apps          |
+# |------------------------------------------|
+FROM base AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV STANDALONE_MODE=true
+RUN bun run build
+
+# |------------------------------------------|
+# | Stage 3 : Production Server              |
+# | Copy and running as image container      |
+# |------------------------------------------|
+FROM base AS runner
+
+# Create group & user basic
+RUN addgroup -g 1050 laporanpklsmk \ 
+  && adduser -u 1050 -G laporanpklsmk -s /bin/sh -D laporanpklsmk
+
+# Working directory
+WORKDIR /app
+# Mode environment to production
+ENV NODE_ENV=production
+
+# Copy file to basic user
+COPY --chown=laporanpklsmk:laporanpklsmk --from=build /app/public ./public
+COPY --chown=laporanpklsmk:laporanpklsmk --from=build /app/.next/standalone ./
+COPY --chown=laporanpklsmk:laporanpklsmk --from=build /app/.next/static ./.next/static
+
+# Running (Expose port 3000, port Next.js)
+EXPOSE 3000
+CMD ["bun", "server.js"]

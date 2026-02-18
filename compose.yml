@@ -1,0 +1,103 @@
+# Docker For Sevices
+services:
+  app:
+    image: gchr.io/tkjskanesga/prakerin-hub:latest
+    restart: unless-stopped
+    container_name: prakerinhub-app
+    environment:
+      - # Application (Required)
+      - "APP_DEBUG=true"
+      - "APP_JWT_SECRET=xxxxxx" # Need Generated For JWT!
+      - "SEISHIRO_PASSKEY=xxxx" # Need Generated For Seishiro!
+
+      - # Turnstle Widget (Required)
+      - "TURNSTILE_SITE_KEY=xxx"
+      - "TURNSTILE_SECRET_KEY=xxx"
+
+      - # Database (Required)
+      - "DB_HOST=postgres" # Hostname
+      - "DB_PORT=5432" # Port
+      - "DB_USERNAME=prakerinhub" # Username
+      - "DB_PASSWORD=prakerinhubproduction_PleaseChangeThis" # Password
+      - "DB_DATABASE=prakerinhub" # Database
+
+      - # S3 Bucket (Required)
+      - "S3_ACCESS_KEY_ID=prakerinhub"
+      - "S3_SECRET_ACCESS_KEY=prakerinhubproduction_PleaseChangeThis"
+      - "S3_REGION=us-east-1"
+      - "S3_ENDPOINT=http://minio:9000"
+      - "S3_BUCKET=prakerinhub"
+      - "S3_USE_PATH_STYLE_ENDPOINT=false"
+
+      - # Gotenberg (Required)
+      - "GOTENBERG_URL=http://gotenberg:3000"
+    ports:
+      - 80:3000
+    networks:
+      - prakerinhub-app
+
+  # Postgres - Database
+  postgres:
+    image: postgis/postgis:18-3.6-alpine
+    restart: unless-stopped
+    container_name: prakerinhub-db
+    environment:
+      - "POSTGRES_USER=prakerinhub"
+      - "POSTGRES_PASSWORD=prakerinhubproduction_PleaseChangeThis"
+      - "POSTGRES_DB=prakerinhub"
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data-prakerinhub:/var/lib/postgresql/data
+    networks:
+      - prakerinhub-app
+
+  # Pgadmin - Database GUI
+  pgadmin:
+    image: dpage/pgadmin4:9.9
+    restart: always
+    container_name: prakerinhub-pgadmin
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL=prakerinhub@prakerinhub.id"
+      - "PGADMIN_DEFAULT_PASSWORD=prakerinhubproduction_PleaseChangeThis"
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data-prakerinhub:/var/lib/pgadmin/
+    networks:
+      - prakerinhub-app
+
+  # Minio - Object Storage
+  minio:
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1
+    restart: always
+    container_name: prakerinhub-minio
+    environment:
+      - "MINIO_ROOT_USER=prakerinhub"
+      - "MINIO_ROOT_PASSWORD=prakerinhubproduction_PleaseChangeThis"
+      - "MINIO_DEFAULT_BUCKETS=prakerinhub-bucket"
+    volumes:
+      - minio-data-prakerinhub:/data
+    ports:
+      - 9001:9001 # Console
+    command: server /data --address ":9000" --console-address ":9001"
+    networks:
+      - prakerinhub-app
+
+  # Gotenberg - PDF Generator
+  gotenberg:
+    image: gotenberg/gotenberg:8.26.0
+    restart: unless-stopped
+    container_name: prakerinhub-gotenberg
+    networks:
+      - prakerinhub-app
+
+# Volumes
+volumes:
+  postgres-data-prakerinhub:
+  pgadmin-data-prakerinhub:
+  minio-data-prakerinhub:
+
+# Networks
+networks:
+  prakerinhub-app:

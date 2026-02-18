@@ -1,0 +1,18 @@
+import { Actions, PolicyBuilder } from "seishiro";
+import registry from "./registry";
+import message from "./message";
+
+const policy = new PolicyBuilder({
+  passkey: process.env.SEISHIRO_PASSKEY,
+  version_now: "1.4.5",
+  version_min: "1.4.0",
+  version_forceupdate: true,
+});
+
+const action = new Actions({
+  registry: registry,
+  message: message,
+  policy: policy,
+});
+
+export default action;
