@@ -135,7 +135,7 @@ CREATE TABLE "trainees_participants" (
 --> statement-breakpoint
 CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"school_id" uuid,
+	"institutions_id" uuid,
 	"fullname" text NOT NULL,
 	"picture_url" text DEFAULT null,
 	"username" text NOT NULL,
@@ -165,4 +165,4 @@ ALTER TABLE "trainees_groups" ADD CONSTRAINT "trainees_groups_created_by_users_i
 ALTER TABLE "trainees_groups" ADD CONSTRAINT "trainees_groups_approved_by_users_id_fk" FOREIGN KEY ("approved_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "trainees_participants" ADD CONSTRAINT "trainees_participants_group_id_trainees_groups_id_fk" FOREIGN KEY ("group_id") REFERENCES "public"."trainees_groups"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "trainees_participants" ADD CONSTRAINT "trainees_participants_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "users" ADD CONSTRAINT "users_school_id_institutions_id_fk" FOREIGN KEY ("school_id") REFERENCES "public"."institutions"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "users" ADD CONSTRAINT "users_institutions_id_institutions_id_fk" FOREIGN KEY ("institutions_id") REFERENCES "public"."institutions"("id") ON DELETE no action ON UPDATE no action;

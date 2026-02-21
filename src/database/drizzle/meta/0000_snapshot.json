@@ -1,5 +1,5 @@
 {
-  "id": "35385a14-425b-473b-bce2-c338de1eb072",
+  "id": "9a72ccfd-cc16-4784-b27f-c635437f7808",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -972,8 +972,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "school_id": {
-          "name": "school_id",
+        "institutions_id": {
+          "name": "institutions_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -1058,12 +1058,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_school_id_institutions_id_fk": {
-          "name": "users_school_id_institutions_id_fk",
+        "users_institutions_id_institutions_id_fk": {
+          "name": "users_institutions_id_institutions_id_fk",
           "tableFrom": "users",
           "tableTo": "institutions",
           "columnsFrom": [
-            "school_id"
+            "institutions_id"
           ],
           "columnsTo": [
             "id"
