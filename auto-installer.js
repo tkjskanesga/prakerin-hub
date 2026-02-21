@@ -5,6 +5,9 @@ import { execSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import url from "node:url";
+
+const __filename = url.fileURLToPath(import.meta.url);
 
 function randomPassword(prefix = "") {
   return prefix ? prefix + ":" + crypto.randomBytes(16).toString("hex") : crypto.randomBytes(16).toString("hex");
@@ -39,6 +42,15 @@ function check_podman() {
 }
 
 async function main() {
+  const isBunRuntime = process.argv[0].match("bun")
+  if (process.argv.includes("--need-interactive-io")) {
+    execSync(`${isBunRuntime ? "bun" : "node"} ${__filename}`, {
+      stdio: "inherit",
+      shell: true
+    });
+    return;
+  }
+
   console.log(`
  _____         _           _        _____     _   
 |  _  |___ ___| |_ ___ ___|_|___   |  |  |_ _| |_ 
@@ -55,13 +67,13 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   console.log(chalk.green("✓ ") + "Jsonwebtoken     : " + jwt_and_seishiro_passkey.jwt)
 
   console.log(chalk.bold("\n [Checking] → [Checking Runtime]"))
-  const isBunRuntime = process.argv[0].match("bun")
   console.log(chalk.green("✓ ") + "Runtime : " + (isBunRuntime ? "🍞 Bun" : "📦 Node"))
 
   // Check docker/podman installation
   console.log(chalk.bold("\n [Checking] → [Checking info]"))
   let process_pwd = process.cwd()
-  console.log(chalk.blue("? ") + "Running at " + chalk.bold(process_pwd))
+  console.log(chalk.green("✓ ") + "Running at " + chalk.bold(process_pwd))
+  console.log(chalk.green("✓ ") + "Self script " + chalk.bold(__filename))
   console.log(chalk.blue("? ") + "Checking docker/podman installation...")
   const docker_check = check_docker()
   const podman_check = check_podman()

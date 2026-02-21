@@ -88,7 +88,7 @@ if [ -d "$REPO_DIR" ]; then
     bun install --dev
     cd ..
     echo "[+] Running auto-installer..."
-    bun ./$REPO_DIR/auto-installer.js
+    bun ./$REPO_DIR/auto-installer.js --need-interactive-io
 else
     echo "[✗] Failed to locate repository directory."
     exit 1
