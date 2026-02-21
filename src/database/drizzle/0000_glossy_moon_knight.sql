@@ -1,10 +1,11 @@
-CREATE TYPE "public"."status" AS ENUM('negeri', 'swasta', 'universitas', 'lainnya');--> statement-breakpoint
-CREATE TYPE "public"."type" AS ENUM('smk', 'sma', 'ma', 'mak', 'kuliah', 'lainnya');--> statement-breakpoint
+CREATE TYPE "public"."status" AS ENUM('negeri', 'swasta', 'universitas', 'other');--> statement-breakpoint
+CREATE TYPE "public"."type" AS ENUM('smk', 'sma', 'ma', 'smalb', 'kuliah', 'other');--> statement-breakpoint
 CREATE TYPE "public"."users_role" AS ENUM('participant', 'mentor', 'mentor-high', 'admin', 'default-admin');--> statement-breakpoint
 CREATE TABLE "classes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"institution_id" uuid,
 	"label" text NOT NULL,
+	"academic_year" varchar(20),
 	"created_at" timestamp with time zone DEFAULT now()
 );
 --> statement-breakpoint
@@ -24,7 +25,8 @@ CREATE TABLE "institutions" (
 	"status" "status",
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
-	"deleted_at" timestamp with time zone
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "institutions_regis_number_unique" UNIQUE("regis_number")
 );
 --> statement-breakpoint
 CREATE TABLE "participants" (
@@ -33,11 +35,10 @@ CREATE TABLE "participants" (
 	"class_id" uuid,
 	"student_national" text,
 	"student_number" text,
-	"fullname" text NOT NULL,
-	"gender" text,
+	"gender" varchar(1),
 	"birth_place" text,
 	"birth_date" date,
-	"address" text,
+	"religion" text,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
@@ -52,6 +53,7 @@ CREATE TABLE "users" (
 	"picture_url" text DEFAULT null,
 	"username" text NOT NULL,
 	"password" text NOT NULL,
+	"address" text,
 	"email" text NOT NULL,
 	"phone" text,
 	"role" "users_role" DEFAULT 'participant',

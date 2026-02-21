@@ -9,7 +9,6 @@ FROM node:23.11.0-alpine AS base
 FROM base AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-COPY package.json ./
 RUN npm ci
 # |------------------------------------------|
 # | Stage 2 : Building Application           |
@@ -21,6 +20,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV STANDALONE_MODE=true
 RUN npm run build
+RUN mkdir -p /app/public
 # |------------------------------------------|
 # | Stage 3 : Production Server              |
 # | Copy and running as image container      |

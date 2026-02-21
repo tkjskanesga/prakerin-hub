@@ -1,5 +1,5 @@
 {
-  "id": "83b71a10-6255-4bdf-8351-6a70fc5af39b",
+  "id": "0406b9b8-0a47-45a3-89e3-b1102fa01a48",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -27,6 +27,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "academic_year": {
+          "name": "academic_year",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -41,8 +47,12 @@
           "name": "classes_institution_id_institutions_id_fk",
           "tableFrom": "classes",
           "tableTo": "institutions",
-          "columnsFrom": ["institution_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "institution_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -166,7 +176,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "institutions_regis_number_unique": {
+          "name": "institutions_regis_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "regis_number"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -206,15 +224,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "fullname": {
-          "name": "fullname",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "gender": {
           "name": "gender",
-          "type": "text",
+          "type": "varchar(1)",
           "primaryKey": false,
           "notNull": false
         },
@@ -230,8 +242,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "address": {
-          "name": "address",
+        "religion": {
+          "name": "religion",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -262,8 +274,12 @@
           "name": "participants_user_id_users_id_fk",
           "tableFrom": "participants",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -271,8 +287,12 @@
           "name": "participants_class_id_classes_id_fk",
           "tableFrom": "participants",
           "tableTo": "classes",
-          "columnsFrom": ["class_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -282,12 +302,16 @@
         "participants_user_id_unique": {
           "name": "participants_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         },
         "participants_student_national_unique": {
           "name": "participants_student_national_unique",
           "nullsNotDistinct": false,
-          "columns": ["student_national"]
+          "columns": [
+            "student_national"
+          ]
         }
       },
       "policies": {},
@@ -335,6 +359,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "email": {
           "name": "email",
@@ -389,8 +419,12 @@
           "name": "users_school_id_institutions_id_fk",
           "tableFrom": "users",
           "tableTo": "institutions",
-          "columnsFrom": ["school_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "school_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -400,7 +434,9 @@
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
-          "columns": ["username"]
+          "columns": [
+            "username"
+          ]
         }
       },
       "policies": {},
@@ -412,12 +448,24 @@
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": ["negeri", "swasta", "universitas", "lainnya"]
+      "values": [
+        "negeri",
+        "swasta",
+        "universitas",
+        "other"
+      ]
     },
     "public.type": {
       "name": "type",
       "schema": "public",
-      "values": ["smk", "sma", "ma", "mak", "kuliah", "lainnya"]
+      "values": [
+        "smk",
+        "sma",
+        "ma",
+        "smalb",
+        "kuliah",
+        "other"
+      ]
     },
     "public.users_role": {
       "name": "users_role",

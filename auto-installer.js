@@ -16,7 +16,7 @@ const __filename = url.fileURLToPath(import.meta.url);
 
 function randomPassword(prefix = "") {
   return prefix
-    ? prefix + ":" + crypto.randomBytes(16).toString("hex")
+    ? prefix + crypto.randomBytes(16).toString("hex")
     : crypto.randomBytes(16).toString("hex");
 }
 function generateJwtAndSeishiroPasskey() {
@@ -65,7 +65,7 @@ async function main() {
 |__|  |_| |__,|_,_|___|_| |_|_|_|  |__|__|___|___|
 
 Sederhanakan Administrasi, Maksimalkan Potensi Praktik!
-${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
+Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
                                                   `);
   // Generate JWT and Seishiro Passkey
   console.log(chalk.bold(" [Checking] → [Generate JWT & Seishiro Passkey]"));
@@ -111,19 +111,22 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   console.log(chalk.bold("\n [Setup] → [Setup Database]"));
   const db_username = await input({
     message: "Username database:",
-    default: "prakerin-hub",
+    default: "prakerinhub",
     required: true,
   });
   const db_password = await input({
     message: "Password database:",
-    default: randomPassword("services-db"),
+    default: randomPassword("servicesdb"),
     required: true,
   });
   const db_database = await input({
     message: "Database name:",
-    default: "prakerin-hub",
+    default: "prakerinhub",
     required: true,
   });
+  console.log(
+    chalk.gray("Note: Port database need to be exposed for migration process!"),
+  );
   const db_port = await input({
     message: "Database port expose (type none to no expose):",
     default: "5432",
@@ -139,17 +142,17 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   console.log(chalk.bold("\n [Setup] → [Setup Minio]"));
   const minio_username = await input({
     message: "Username minio:",
-    default: "prakerin-hub",
+    default: "prakerinhub",
     required: true,
   });
   const minio_password = await input({
     message: "Password minio:",
-    default: randomPassword("services-s3"),
+    default: randomPassword("servicess3"),
     required: true,
   });
   const minio_bucket = await input({
     message: "Bucket name:",
-    default: "prakerin-hub",
+    default: "prakerinhub",
     required: true,
   });
   const minio_port = await input({
@@ -240,7 +243,7 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   });
 
   // Setup Application First!
-  let appsetupwizardcase = {};
+  let appsetupwizardcase = null;
   if (app_autosetupfirst === "Y" && !!container_type) {
     console.log(chalk.bold("\n [Setup] → [Setup Application First]"));
     console.log(
@@ -335,7 +338,6 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
 
   // Create Docker/Podman Compose
   let structureComposeContainer = {
-    version: "3.0",
     services: {
       app: {
         image: "ghcr.io/tkjskanesga/prakerin-hub:" + app_version,
@@ -347,13 +349,13 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
           `APP_JWT_SECRET=${jwt_and_seishiro_passkey.jwt}`,
           `APP_SEISHIRO_PASSKEY=${jwt_and_seishiro_passkey.seishiro}`,
           // Database
-          `DB_HOST=database`,
-          `DB_PORT=5432`,
-          `DB_USER=${db_username}`,
+          `DB_HOST=${db_port === "none" ? "database" : "localhost"}`,
+          `DB_PORT=${db_port === "none" ? "5432" : db_port}`,
+          `DB_USERNAME=${db_username}`,
           `DB_PASSWORD=${db_password}`,
-          `DB_NAME=${db_database}`,
+          `DB_DATABASE=${db_database}`,
           // Minio
-          `S3_ENDPOINT=minio:9000`,
+          `S3_ENDPOINT=${minio_port === "none" ? "minio" : "localhost"}:${minio_port === "none" ? "9000" : minio_port}`,
           `S3_ACCESS_KEY_ID=${minio_username}`,
           `S3_SECRET_ACCESS_KEY=${minio_password}`,
           `S3_BUCKET=${minio_bucket}`,
@@ -363,7 +365,7 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
           `TURNSTILE_SITE_KEY=${turnstile_site_key}`,
           `TURNSTILE_SECRET_KEY=${turnstile_secret_key}`,
           // Gotenberg
-          `GOTENBERG_URL=http://gotenberg:3000`,
+          `GOTENBERG_URL=${gotenberg_port === "none" ? "http://gotenberg" : "http://localhost"}:${gotenberg_port === "none" ? "3000" : gotenberg_port}`,
         ],
         ports: [`${app_port}:3000`],
         networks: ["prakerin-hub-network"],
@@ -392,12 +394,12 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
           `MINIO_ROOT_PASSWORD=${minio_password}`,
           `MINIO_DEFAULT_BUCKETS=${minio_bucket}`,
         ],
-        command: 'server /data --address ":9000" --console-address ":9001"',
+        command: `server /data --address ":${minio_port}" --console-address ":${minio_console_port}"`,
         ports: [
-          minio_port === "none" ? undefined : `${minio_port}:9000`,
+          minio_port === "none" ? undefined : `${minio_port}:${minio_port}`,
           minio_console_port === "none"
             ? undefined
-            : `${minio_console_port}:9001`,
+            : `${minio_console_port}:${minio_console_port}`,
         ].filter((a) => a !== undefined),
         volumes: ["prakerin-hub-data-minio:/data"],
         networks: ["prakerin-hub-network"],
@@ -433,7 +435,9 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
       ],
       ports: [db_pgadmin === "none" ? undefined : `${db_pgadmin}:80`],
       networks: ["prakerin-hub-network"],
+      volumes: ["prakerin-hub-data-pgadmin:/var/lib/pgadmin"],
     };
+    structureComposeContainer.volumes["prakerin-hub-data-pgadmin"] = {};
   }
 
   // Build Docker Compose
@@ -441,6 +445,17 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   fs.writeFileSync(
     path.join(process.cwd(), docker_compose_file),
     buildStructure,
+  );
+  const backupEnv = crypto.randomBytes(16).toString("hex");
+  if (fs.existsSync("./.env") && fs.lstatSync("./.env").isFile()) {
+    fs.renameSync("./.env", `./.env.${backupEnv}`);
+    console.log(chalk.gray(`Backup .env to .env.${backupEnv}`));
+  }
+  const toFileEnv =
+    structureComposeContainer.services.app.environment.join("\n");
+  fs.writeFileSync(
+    "./.env",
+    `# Prod Env!\n# Don't share this file to public!\n${toFileEnv}`,
   );
 
   // All installed manually
@@ -459,6 +474,11 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   console.log(chalk.gray(`\n ~$ ${executed}\n`));
   execSync(executed, { stdio: "inherit" });
 
+  // Waiting for database to be ready
+  console.log(chalk.bold("\n [Waiting] → [Waiting for database to be ready]"));
+  console.log(chalk.gray(`\n Waiting for 90 seconds...\n`));
+  await new Promise((resolve) => setTimeout(resolve, 90000));
+
   // Running migration
   const executedMigration = isBunRuntime
     ? "bunx drizzle-kit migrate"
@@ -467,30 +487,40 @@ ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"))}
   console.log(chalk.gray(`\n ~$ ${executedMigration}\n`));
   execSync(executedMigration, { stdio: "inherit" });
 
-  // Running
-  console.log(chalk.bold("\n [Running] → [Running Seed]"));
-  console.log(chalk.gray(`\n Insert admin...\n`));
-  await db.insert(usersSchema).values({
-    fullname: appsetupwizardcase.admin.fullname,
-    username: appsetupwizardcase.admin.username,
-    password: HashPassword(appsetupwizardcase.admin.password),
-    email: appsetupwizardcase.admin.email,
-    role: "default-admin",
-  });
-  console.log(chalk.gray(`\n Insert school default...\n`));
-  await db.insert(institutionsSchema).values({
-    name: appsetupwizardcase.institution.name,
-    address: appsetupwizardcase.institution.address,
-    city: appsetupwizardcase.institution.city,
-    state: appsetupwizardcase.institution.state,
-    zip: appsetupwizardcase.institution.zip,
-    country: appsetupwizardcase.institution.country,
-    phone: appsetupwizardcase.institution.phone,
-    email: appsetupwizardcase.institution.email,
-    website: appsetupwizardcase.institution.website,
-    logo: appsetupwizardcase.institution.logo,
-    status: appsetupwizardcase.institution.status,
-  });
+  // Running seed
+  if (!!appsetupwizardcase) {
+    console.log(chalk.bold("\n [Running] → [Running Seed]"));
+    console.log(chalk.gray(`\n Insert admin...\n`));
+    await db.insert(usersSchema).values({
+      fullname: appsetupwizardcase.admin.fullname,
+      username: appsetupwizardcase.admin.username,
+      password: HashPassword(appsetupwizardcase.admin.password),
+      email: appsetupwizardcase.admin.email,
+      role: "default-admin",
+    });
+    console.log(chalk.gray(`\n Insert school default...\n`));
+    await db.insert(institutionsSchema).values({
+      name: appsetupwizardcase.institution.name,
+      address: appsetupwizardcase.institution.address,
+      city: appsetupwizardcase.institution.city,
+      state: appsetupwizardcase.institution.state,
+      zip: appsetupwizardcase.institution.zip,
+      country: appsetupwizardcase.institution.country,
+      phone: appsetupwizardcase.institution.phone,
+      email: appsetupwizardcase.institution.email,
+      website: appsetupwizardcase.institution.website,
+      logo: appsetupwizardcase.institution.logo,
+      status: appsetupwizardcase.institution.status,
+    });
+  }
+
+  console.log(chalk.bold("\n\n\n [Building] → [Success!]\n"));
+  console.log("🎊 Horay!, You have successfully installed Prakerin Hub!");
+  console.log("You can access the application at:");
+  console.log(`http://localhost:${app_port}`);
+
+  console.log(`\n✨ Don't forget support us by giving a star on our github!`);
+  console.log(`https://github.com/tkjskanesga/prakerin-hub\n`);
 }
 
 main();

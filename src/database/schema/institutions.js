@@ -1,12 +1,12 @@
-import { pgTable, text, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core"
-import globalVariable from "@/lib/global-variable"
+import { pgTable, text, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core";
+import globalVariable from "@/lib/global-variable";
 
-export const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type)
-export const institutionsStatusEnum = pgEnum("status", globalVariable.db.school_status)
+export const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type);
+export const institutionsStatusEnum = pgEnum("status", globalVariable.db.school_status);
 
 const institutions = pgTable("institutions", {
   id: uuid("id").primaryKey().defaultRandom(), // ID
-  regis_number: text("regis_number").notNull(), // NPSN (Sekolah) / PT.Code (Universitas)
+  regis_number: text("regis_number").unique().notNull(), // NPSN (Sekolah) / PT.Code (Universitas)
   icon: text("icon").default(""), // Icon (?)
   name: text("name").notNull(), // Name Sekolah/Universitas
   address: text("address").notNull(), // Alamat
@@ -21,6 +21,6 @@ const institutions = pgTable("institutions", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
-})
+});
 
-export default institutions
+export default institutions;
