@@ -2,12 +2,12 @@
 services:
   # Postgres - Database
   database:
-    image: postgis/postgis:18-3.6-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     container_name: services-laporanpkl-app-postgres
     environment:
       - "POSTGRES_USER=laporanpkl"
-      - "POSTGRES_PASSWORD=LaporanPKL2027Dev"
+      - "POSTGRES_PASSWORD=laporanpkl"
       - "POSTGRES_DB=laporanpkl"
     ports:
       - 7477:5432
@@ -23,7 +23,7 @@ services:
     container_name: services-laporanpkl-app-pgadmin
     environment:
       - "PGADMIN_DEFAULT_EMAIL=laporanpkl@laporanpkl.id"
-      - "PGADMIN_DEFAULT_PASSWORD=LaporanPKL2027Dev"
+      - "PGADMIN_DEFAULT_PASSWORD=laporanpkl"
     ports:
       - 7478:80
     volumes:
@@ -38,7 +38,7 @@ services:
     container_name: services-laporanpkl-app-minio
     environment:
       - "MINIO_ROOT_USER=laporanpkl"
-      - "MINIO_ROOT_PASSWORD=LaporanPKL2027Dev"
+      - "MINIO_ROOT_PASSWORD=laporanpkl"
       - "MINIO_DEFAULT_BUCKETS=laporanpkl-bucket"
     volumes:
       - minio-data-laporanpkl:/data

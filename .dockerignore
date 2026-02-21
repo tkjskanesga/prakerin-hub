@@ -62,10 +62,18 @@ mcp
 /pcd/
 /pcd/*
 compose-service.yml
+compose.yml
+compose.yaml
+compose*.yml
+compose*.yaml
+docker*.yml
+docker*.yaml
 Dockerfile
 Dockerfile.dev
 Dockerfile.bun
 
 # action
 dev-versioning.js
+auto-installer.js
+auto-installer.sh
 .github/

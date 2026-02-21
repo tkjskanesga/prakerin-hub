@@ -10,5 +10,5 @@ export default defineConfig({
     ...configdb,
     ssl: configdb.ssl || false,
   },
-  tablesFilter: ["users", "auths", "mails", "settings"],
+  // tablesFilter: ["users", "auths", "mails", "settings"],
 });

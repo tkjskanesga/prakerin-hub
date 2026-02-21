@@ -1,7 +1,7 @@
 export default {
   db: {
-    school_type: ["smk", "sma", "ma", "mak", "kuliah", "lainnya"],
-    school_status: ["negeri", "swasta", "universitas", "lainnya"],
+    school_type: ["smk", "sma", "ma", "smalb", "kuliah", "other"],
+    school_status: ["negeri", "swasta", "universitas", "other"],
     role_users: [
       "participant",
       "mentor",
@@ -14,6 +14,6 @@ export default {
     default_maximum_group: 4, // 4 person
   },
   scrapper_SekolahKita: {
-    school_type: ["SMK", "SMA", "MA", "MAK"],
+    school_type: ["SMK", "SMA", "MA"],
   },
 };

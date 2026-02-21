@@ -1,4 +1,4 @@
-# Prakerin Hub (Praktik Kerja Industri) - Sederhanakan Administrasi, Maksimalkan Potensi Praktikan!
+# Prakerin Hub (Praktik Kerja Industri) - Sederhanakan Administrasi, Maksimalkan Potensi Praktik!
 
 > [!WARNING]
 > Aplikasi masih ditahap pengembangan, silahkan tunggu dari hasil task yang dikerjakan!.

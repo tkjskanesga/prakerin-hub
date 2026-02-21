@@ -1,0 +1,83 @@
+version: "3.0"
+services:
+  app:
+    image: ghcr.io/tkjskanesga/prakerin-hub:latest
+    container_name: prakerin-hub-app
+    restart: unless-stopped
+    environment:
+      - APP_DEBUG=false
+      - APP_JWT_SECRET=jwt|hex:base64url|f3cfacbf1f89a35a7d4f4ff0071bf900:cOHlKLcC-iGe9dMPXSy6A1p9rhXwl6tujwFQR3yWcsA
+      - APP_SEISHIRO_PASSKEY=seishiro|hex:base64url|6ac7d0122008ab0864fe4573:snHabuv_oCgYjRUTUZZA0aWe8-KN-Ozp
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=prakerin-hub
+      - DB_PASSWORD=services-db:360554bff10264d574586b33910ffbc9
+      - DB_NAME=prakerin-hub
+      - S3_ENDPOINT=minio:9000
+      - S3_ACCESS_KEY_ID=prakerin-hub
+      - S3_SECRET_ACCESS_KEY=services-s3:aea626cf1226085115064921e79761f8
+      - S3_BUCKET=prakerin-hub
+      - S3_REGION=us-east-1
+      - S3_USE_PATH_STYLE_ENDPOINT=true
+      - TURNSTILE_SITE_KEY=adadawdad
+      - TURNSTILE_SECRET_KEY=adwadawdawd
+      - GOTENBERG_URL=http://gotenberg:3000
+    ports:
+      - 3000:3000
+    networks:
+      - prakerin-hub-network
+  database:
+    image: postgres:15-alpine
+    container_name: prakerin-hub-database
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=prakerin-hub
+      - POSTGRES_PASSWORD=services-db:360554bff10264d574586b33910ffbc9
+      - POSTGRES_DB=prakerin-hub
+    ports:
+      - 5432:5432
+    volumes:
+      - prakerin-hub-data-postgres:/var/lib/postgresql/data
+    networks:
+      - prakerin-hub-network
+  minio:
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1
+    container_name: prakerin-hub-minio
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=prakerin-hub
+      - MINIO_ROOT_PASSWORD=services-s3:aea626cf1226085115064921e79761f8
+      - MINIO_DEFAULT_BUCKETS=prakerin-hub
+    command: server /data --address ":9000" --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - prakerin-hub-data-minio:/data
+    networks:
+      - prakerin-hub-network
+  gotenberg:
+    image: gotenberg/gotenberg:8.26.0
+    container_name: prakerin-hub-gotenberg
+    restart: unless-stopped
+    ports:
+      - 8080:3000
+    networks:
+      - prakerin-hub-network
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: prakerin-hub-pgadmin
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=prakerin-hub@prakerin-hub.id
+      - PGADMIN_DEFAULT_PASSWORD=services-db:360554bff10264d574586b33910ffbc9
+    ports:
+      - 8420:80
+    networks:
+      - prakerin-hub-network
+networks:
+  prakerin-hub-network:
+    driver: bridge
+volumes:
+  prakerin-hub-data-postgres: {}
+  prakerin-hub-data-minio: {}

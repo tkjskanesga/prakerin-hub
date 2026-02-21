@@ -1,8 +1,8 @@
-import { pgTable, text, uuid, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, text, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core"
 import globalVariable from "@/lib/global-variable"
 
-const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type)
-const institutionsStatusEnum = pgEnum("status", globalVariable.db.school_status)
+export const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type)
+export const institutionsStatusEnum = pgEnum("status", globalVariable.db.school_status)
 
 const institutions = pgTable("institutions", {
   id: uuid("id").primaryKey().defaultRandom(), // ID
