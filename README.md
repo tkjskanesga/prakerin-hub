@@ -33,6 +33,17 @@ Tersedia dua versi image yang dapat digunakan:
 - **Stable**: `ghcr.io/tkjskanesga/prakerin-hub:latest` (Direkomendasikan)
 - **Development**: `ghcr.io/tkjskanesga/prakerin-hub:stage` (Versi tahap awal, sering berubah)
 
+### Menggunakan Auto Installer
+
+> [!WARNING]
+> Auto installer ini akan menginstall aplikasi di direktori kerja saat ini, dan akan menghapus direktori kerja setelah selesai.
+
+```bash
+curl https://raw.githubusercontent.com/tkjskanesga/prakerin-hub/main/auto-installer.sh -o ./setup.sh
+chmod +x ./setup.sh
+./setup.sh
+```
+
 ### Menggunakan Docker Compose
 
 Aplikasi berjalan di port `3000` dan tidak memerlukan mounting volume khusus pada container aplikasi. Berikut contoh konfigurasi `docker-compose.yml`:
