@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, timestamp, date, varchar } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import users from "./users";
 import classes from "./classes";
 
@@ -18,3 +19,7 @@ const participants = pgTable("participants", {
 });
 
 export default participants;
+
+export const participantsRelations = relations(participants, ({ one }) => ({
+  user: one(users, { fields: [participants.user_id], references: [users.id] }),
+}));

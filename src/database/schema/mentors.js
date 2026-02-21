@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import classes from "./classes";
 import users from "./users";
 
@@ -14,3 +15,7 @@ const mentors = pgTable("mentors", {
 });
 
 export default mentors;
+
+export const mentorsRelations = relations(mentors, ({ one }) => ({
+  user: one(users, { fields: [mentors.user_id], references: [users.id] }),
+}));

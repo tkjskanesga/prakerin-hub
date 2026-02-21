@@ -1,4 +1,7 @@
 import { pgTable, uuid, text, timestamp, integer, pgEnum } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import participants from "./participants";
+import mentors from "./mentors";
 import institutions from "./institutions";
 import globalVariable from "@/lib/global-variable";
 
@@ -22,3 +25,14 @@ const users = pgTable("users", {
 });
 
 export default users;
+
+export const usersRelations = relations(users, ({ one }) => ({
+  participantProfile: one(participants, {
+    fields: [users.id],
+    references: [participants.user_id],
+  }),
+  mentorProfile: one(mentors, {
+    fields: [users.id],
+    references: [mentors.user_id],
+  }),
+}));
