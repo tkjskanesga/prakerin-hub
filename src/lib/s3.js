@@ -5,6 +5,7 @@ import {
   GetObjectCommand,
   HeadBucketCommand,
   CreateBucketCommand,
+  ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -22,7 +23,7 @@ const s3Client = new S3Client({
   forcePathStyle: process.env.S3_USE_PATH_STYLE_ENDPOINT === "true",
 });
 
-const BUCKET_NAME = process.env.S3_BUCKET;
+const BUCKET_NAME = String(process.env.S3_BUCKET || "e-pkl");
 
 async function ensureBucketExists() {
   try {
@@ -131,5 +132,25 @@ export async function SignedURL(id) {
   } catch (error) {
     console.error("Error generating signed URL:", error);
     return { error: "s3:signed-url-failed", params: [{ id }] };
+  }
+}
+
+export async function ListFiles(tokenNext = undefined) {
+  const command = new ListObjectsV2Command({
+    Bucket: BUCKET_NAME,
+    MaxKeys: 20,
+    ContinuationToken: tokenNext,
+  });
+
+  try {
+    const response = await s3Client.send(command);
+    return {
+      list: response.Contents,
+      next_token: response.NextContinuationToken,
+      is_next: !!response.NextContinuationToken,
+    };
+  } catch (error) {
+    console.error("Error listing files:", error);
+    return { error: "s3:list-failed" };
   }
 }

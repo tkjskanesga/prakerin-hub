@@ -41,12 +41,8 @@
           "name": "classes_institution_id_institutions_id_fk",
           "tableFrom": "classes",
           "tableTo": "institutions",
-          "columnsFrom": [
-            "institution_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["institution_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -266,12 +262,8 @@
           "name": "participants_user_id_users_id_fk",
           "tableFrom": "participants",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -279,12 +271,8 @@
           "name": "participants_class_id_classes_id_fk",
           "tableFrom": "participants",
           "tableTo": "classes",
-          "columnsFrom": [
-            "class_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["class_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -294,16 +282,12 @@
         "participants_user_id_unique": {
           "name": "participants_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         },
         "participants_student_national_unique": {
           "name": "participants_student_national_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "student_national"
-          ]
+          "columns": ["student_national"]
         }
       },
       "policies": {},
@@ -405,12 +389,8 @@
           "name": "users_school_id_institutions_id_fk",
           "tableFrom": "users",
           "tableTo": "institutions",
-          "columnsFrom": [
-            "school_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["school_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -420,9 +400,7 @@
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       },
       "policies": {},
@@ -434,24 +412,12 @@
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": [
-        "negeri",
-        "swasta",
-        "universitas",
-        "lainnya"
-      ]
+      "values": ["negeri", "swasta", "universitas", "lainnya"]
     },
     "public.type": {
       "name": "type",
       "schema": "public",
-      "values": [
-        "smk",
-        "sma",
-        "ma",
-        "mak",
-        "kuliah",
-        "lainnya"
-      ]
+      "values": ["smk", "sma", "ma", "mak", "kuliah", "lainnya"]
     },
     "public.users_role": {
       "name": "users_role",

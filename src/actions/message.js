@@ -13,5 +13,7 @@ message.set("upload-failed", "Gagal mengupload file ke bucket!");
 message.set("delete-failed", "Gagal menghapus file {id}!");
 message.set("read-failed", "Gagal membaca file {id}!");
 message.set("signed-url-failed", "Gagal membuat signed URL untuk {id}!");
+// Turnstile Error
+message.set("turnstile-error-failed", "Gagal memverifikasi Turnstile!");
 
 export default message;

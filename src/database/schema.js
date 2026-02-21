@@ -1,5 +1,9 @@
 export { default as classes } from "./schema/classes";
-export { default as institutions, institutionsStatusEnum, institutionsTypeEnum } from "./schema/institutions";
+export {
+  default as institutions,
+  institutionsStatusEnum,
+  institutionsTypeEnum,
+} from "./schema/institutions";
 // export { default as mentors } from "./schema/mentors";
 // export { default as offices } from "./schema/offices";
 export { default as participants } from "./schema/participants";

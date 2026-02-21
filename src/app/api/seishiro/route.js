@@ -2,6 +2,7 @@ import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { geolocation, ipAddress } from "@vercel/functions";
 import actions from "@/actions/actions";
+import trimObj from "@/lib/trim-obj";
 
 export async function POST(req) {
   const header = await headers();
@@ -39,7 +40,7 @@ export async function POST(req) {
         ].join(", "),
       },
       type: String(bodydata?.type || ""),
-      data: bodydata?.data || {},
+      data: trimObj(bodydata?.data || {}),
     });
     // --- [ Redirect ] ---
     if (requestdata.redirect) {

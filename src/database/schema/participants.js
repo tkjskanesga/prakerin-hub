@@ -8,7 +8,6 @@ const participants = pgTable("participants", {
   class_id: uuid("class_id").references(() => classes.id), // Class ID (Optional)
   student_national: text("student_national").unique(), // NISN (National)
   student_number: text("student_number"), // NIS/NIM (Local)
-  fullname: text("fullname").notNull(), // Fullname (Redundant with users)
   gender: text("gender"), // L/P
   birth_place: text("birth_place"), // Birth Place
   birth_date: date("birth_date", { mode: "string" }), // Birth Date

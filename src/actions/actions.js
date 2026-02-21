@@ -1,9 +1,9 @@
 import { Actions, PolicyBuilder } from "seishiro";
-import registry from "./registry";
+import registry from "./registry/index";
 import message from "./message";
 
 const policy = new PolicyBuilder({
-  passkey: process.env.SEISHIRO_PASSKEY,
+  passkey: String(process.env.SEISHIRO_PASSKEY || "NoSecret!"),
   version_now: "1.4.5",
   version_min: "1.4.0",
   version_forceupdate: true,
