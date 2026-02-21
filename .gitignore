@@ -31,6 +31,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+.env
 .env*
 
 # vercel
@@ -53,6 +54,12 @@ mcp
 # development
 /pcd/
 /pcd/*
+
+# production generated
+compose.yml
+compose.yaml
+docker-compose.yml
+docker-compose.yaml
 
 # testing
 /testing/suratpengajuanpkl_final.docx
