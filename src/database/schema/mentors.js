@@ -1,12 +1,13 @@
 import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
 import classes from "./classes";
+import users from "./users";
 
 const mentors = pgTable("mentors", {
   id: uuid("id").primaryKey().defaultRandom(), // Mentor ID
-  name: text("name").notNull(), // Mentor Name
+  user_id: uuid("user_id").references(() => users.id).unique().notNull(), // User ID
+  class_id: uuid("class_id").references(() => classes.id), // Class ID (Optional)
   title: text("title"), // Gelar: S.T., M.Cs, dsb
   specialization: text("specialization"), // Bidang Keahlian
-  class_id: uuid("class_id").references(() => classes.id), // Class ID (Optional)
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At

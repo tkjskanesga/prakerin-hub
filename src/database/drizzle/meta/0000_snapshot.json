@@ -1,5 +1,5 @@
 {
-  "id": "9a72ccfd-cc16-4784-b27f-c635437f7808",
+  "id": "6820b8ca-9167-4d8e-b657-145af5e4bfcf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -348,11 +348,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "text",
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "class_id": {
+          "name": "class_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "title": {
           "name": "title",
@@ -363,12 +369,6 @@
         "specialization": {
           "name": "specialization",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "class_id": {
-          "name": "class_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -394,6 +394,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "mentors_user_id_users_id_fk": {
+          "name": "mentors_user_id_users_id_fk",
+          "tableFrom": "mentors",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "mentors_class_id_classes_id_fk": {
           "name": "mentors_class_id_classes_id_fk",
           "tableFrom": "mentors",
@@ -409,7 +422,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "mentors_user_id_unique": {
+          "name": "mentors_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
