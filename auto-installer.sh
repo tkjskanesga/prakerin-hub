@@ -88,7 +88,7 @@ if [ -d "$REPO_DIR" ]; then
     bun install --dev
     cd ..
     echo "[+] Running auto-installer..."
-    exec bun ./$REPO_DIR/auto-installer.
+    exec bun ./$REPO_DIR/auto-installer.js
     # Warning, this script can remove $REPO_DIR after auto-installer is done!
     rm -rf $REPO_DIR
 else
