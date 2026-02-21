@@ -17,7 +17,10 @@ function generateJwtAndSeishiroPasskey() {
 }
 function check_docker() {
   try {
-    execSync("docker --version")
+    execSync("docker --version", {
+      stdio: "ignore",
+      shell: true
+    })
     return true
   } catch (error) {
     return false
@@ -25,7 +28,10 @@ function check_docker() {
 }
 function check_podman() {
   try {
-    execSync("podman --version")
+    execSync("podman --version", {
+      stdio: "ignore",
+      shell: true
+    })
     return true
   } catch (error) {
     return false
