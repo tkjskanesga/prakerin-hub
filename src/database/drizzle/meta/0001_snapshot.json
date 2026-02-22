@@ -1,6 +1,6 @@
 {
-  "id": "6820b8ca-9167-4d8e-b657-145af5e4bfcf",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "22f76e51-5e8c-48ac-97d8-80c03655c33e",
+  "prevId": "6820b8ca-9167-4d8e-b657-145af5e4bfcf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -59,8 +59,12 @@
           "name": "auths_user_id_users_id_fk",
           "tableFrom": "auths",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -114,8 +118,12 @@
           "name": "classes_institution_id_institutions_id_fk",
           "tableFrom": "classes",
           "tableTo": "institutions",
-          "columnsFrom": ["institution_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "institution_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -148,7 +156,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "''"
+          "default": null
         },
         "name": {
           "name": "name",
@@ -179,28 +187,28 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "''"
+          "default": "'-'"
         },
         "phone": {
           "name": "phone",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "''"
+          "default": "'-'"
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "''"
+          "default": "'-'"
         },
         "subdistrict": {
           "name": "subdistrict",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "''"
+          "default": "'-'"
         },
         "type": {
           "name": "type",
@@ -243,7 +251,9 @@
         "institutions_regis_number_unique": {
           "name": "institutions_regis_number_unique",
           "nullsNotDistinct": false,
-          "columns": ["regis_number"]
+          "columns": [
+            "regis_number"
+          ]
         }
       },
       "policies": {},
@@ -298,8 +308,12 @@
           "name": "letter_template_institutions_id_institutions_id_fk",
           "tableFrom": "letter_template",
           "tableTo": "institutions",
-          "columnsFrom": ["institutions_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "institutions_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -307,8 +321,12 @@
           "name": "letter_template_uploader_id_users_id_fk",
           "tableFrom": "letter_template",
           "tableTo": "users",
-          "columnsFrom": ["uploader_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "uploader_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -346,13 +364,15 @@
           "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'-'"
         },
         "specialization": {
           "name": "specialization",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'-'"
         },
         "created_at": {
           "name": "created_at",
@@ -380,8 +400,12 @@
           "name": "mentors_user_id_users_id_fk",
           "tableFrom": "mentors",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -389,8 +413,12 @@
           "name": "mentors_class_id_classes_id_fk",
           "tableFrom": "mentors",
           "tableTo": "classes",
-          "columnsFrom": ["class_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -400,7 +428,9 @@
         "mentors_user_id_unique": {
           "name": "mentors_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         }
       },
       "policies": {},
@@ -512,7 +542,9 @@
         "offices_email_unique": {
           "name": "offices_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -604,8 +636,12 @@
           "name": "participants_user_id_users_id_fk",
           "tableFrom": "participants",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -613,8 +649,12 @@
           "name": "participants_class_id_classes_id_fk",
           "tableFrom": "participants",
           "tableTo": "classes",
-          "columnsFrom": ["class_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -624,12 +664,16 @@
         "participants_user_id_unique": {
           "name": "participants_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         },
         "participants_student_national_unique": {
           "name": "participants_student_national_unique",
           "nullsNotDistinct": false,
-          "columns": ["student_national"]
+          "columns": [
+            "student_national"
+          ]
         }
       },
       "policies": {},
@@ -688,8 +732,12 @@
           "name": "trainees_activity_group_id_trainees_groups_id_fk",
           "tableFrom": "trainees_activity",
           "tableTo": "trainees_groups",
-          "columnsFrom": ["group_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -697,8 +745,12 @@
           "name": "trainees_activity_user_id_users_id_fk",
           "tableFrom": "trainees_activity",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -816,8 +868,12 @@
           "name": "trainees_groups_office_id_offices_id_fk",
           "tableFrom": "trainees_groups",
           "tableTo": "offices",
-          "columnsFrom": ["office_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "office_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -825,8 +881,12 @@
           "name": "trainees_groups_created_by_users_id_fk",
           "tableFrom": "trainees_groups",
           "tableTo": "users",
-          "columnsFrom": ["created_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -834,8 +894,12 @@
           "name": "trainees_groups_approved_by_users_id_fk",
           "tableFrom": "trainees_groups",
           "tableTo": "users",
-          "columnsFrom": ["approved_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "approved_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -891,8 +955,12 @@
           "name": "trainees_participants_group_id_trainees_groups_id_fk",
           "tableFrom": "trainees_participants",
           "tableTo": "trainees_groups",
-          "columnsFrom": ["group_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -900,8 +968,12 @@
           "name": "trainees_participants_user_id_users_id_fk",
           "tableFrom": "trainees_participants",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1013,8 +1085,12 @@
           "name": "users_institutions_id_institutions_id_fk",
           "tableFrom": "users",
           "tableTo": "institutions",
-          "columnsFrom": ["institutions_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "institutions_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1024,7 +1100,16 @@
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
-          "columns": ["username"]
+          "columns": [
+            "username"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -1036,7 +1121,11 @@
     "public.activity_type": {
       "name": "activity_type",
       "schema": "public",
-      "values": ["action", "chat", "file"]
+      "values": [
+        "action",
+        "chat",
+        "file"
+      ]
     },
     "public.group_status": {
       "name": "group_status",
@@ -1057,17 +1146,32 @@
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": ["negeri", "swasta", "universitas", "other"]
+      "values": [
+        "negeri",
+        "swasta",
+        "universitas",
+        "other"
+      ]
     },
     "public.type": {
       "name": "type",
       "schema": "public",
-      "values": ["smk", "sma", "ma", "smalb", "kuliah", "other"]
+      "values": [
+        "smk",
+        "sma",
+        "ma",
+        "smalb",
+        "kuliah",
+        "other"
+      ]
     },
     "public.participant_type": {
       "name": "participant_type",
       "schema": "public",
-      "values": ["participant", "partner"]
+      "values": [
+        "participant",
+        "partner"
+      ]
     },
     "public.users_role": {
       "name": "users_role",

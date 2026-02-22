@@ -60,6 +60,9 @@ compose.yml
 compose.yaml
 docker-compose.yml
 docker-compose.yaml
+seeder.json
 
 # testing
 /testing/suratpengajuanpkl_final.docx
+/testing/suratpengajuanpkl_final.pdf
+/testing/suratpengajuanpkl_final*

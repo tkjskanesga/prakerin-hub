@@ -25,7 +25,9 @@ export async function POST(req) {
     // Get List School
     const jsonbody = await req.json();
     const sendpayload = {
-      type_school: String(jsonbody?.type_school || "").trim(),
+      school_type: String(jsonbody?.school_type || "").trim(),
+      school_status: String(jsonbody?.school_status || "").trim(),
+      kabupaten_kota: String(jsonbody?.kabupaten_kota || "").trim(),
       search: String(jsonbody?.search || "").trim(),
       page: isNaN(Number(jsonbody?.page)) ? 0 : Number(jsonbody.page),
     };

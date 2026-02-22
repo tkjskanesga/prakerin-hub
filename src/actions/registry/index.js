@@ -6,7 +6,7 @@ import participantRegistry from "./participant";
 import middlewareRegistry from "./middleware";
 
 const registry = new RegistryBuilder({
-  noMidGen: true, // No Middleware Generate Response Context
+  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
 });
 
 registry.use(adminRegistry);

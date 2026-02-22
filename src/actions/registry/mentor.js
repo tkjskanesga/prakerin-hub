@@ -27,6 +27,7 @@ registry.set("mentor:participant-list", () => {}, null); // List Peserta Didik
 registry.set("mentor:participant-get", () => {}, null); // Detail Peserta Didik
 registry.set("mentor:participant-create", () => {}, null); // Buat Peserta Didik
 registry.set("mentor:participant-edit", () => {}, null); // Ubah Data Peserta Didik
+registry.set("mentor:participant-reset-pw", () => {}, null); // Reset Password Peserta Didik
 registry.set("mentor:participant-delete", () => {}, null); // Hapus (hard) Data Peserta Didik
 // Teach / Mentor Admin - Letter Template
 registry.set("mentor:letter-template-list", () => {}, null); // List Template Surat

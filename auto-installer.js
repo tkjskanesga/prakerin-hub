@@ -1,5 +1,6 @@
 import yaml from "yaml";
 import chalk from "chalk";
+import waitOn from "wait-on";
 import { input, select, password } from "@inquirer/prompts";
 import { execSync } from "node:child_process";
 import crypto from "node:crypto";
@@ -16,8 +17,8 @@ const __filename = url.fileURLToPath(import.meta.url);
 
 function randomPassword(prefix = "") {
   return prefix
-    ? prefix + crypto.randomBytes(16).toString("hex")
-    : crypto.randomBytes(16).toString("hex");
+    ? prefix + crypto.randomBytes(8).toString("hex")
+    : crypto.randomBytes(8).toString("hex");
 }
 function generateJwtAndSeishiroPasskey() {
   return {
@@ -72,8 +73,8 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
   const jwt_and_seishiro_passkey = generateJwtAndSeishiroPasskey();
   console.log(
     chalk.green("✓ ") +
-      "Seishiro Passkey : " +
-      jwt_and_seishiro_passkey.seishiro,
+    "Seishiro Passkey : " +
+    jwt_and_seishiro_passkey.seishiro,
   );
   console.log(
     chalk.green("✓ ") + "Jsonwebtoken     : " + jwt_and_seishiro_passkey.jwt,
@@ -251,6 +252,17 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
         "Ensure that the data is entered correctly, no resumes, if you want to change it, you must change it through the database!",
       ),
     );
+    console.log(
+      chalk.red(
+        "Warning: When entering your password, it will not be displayed automatically, so be careful! Make sure you enter it correctly.",
+      ),
+    );
+    console.log(
+      chalk.red(
+        "Be careful when creating admin and mentor accounts. If they have similarities, it will automatically create a database conflict, so they cannot be the same! Use different emails and usernames for accounts with different purposes!",
+      ),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const appsetupwizard = {
       admin: {
         fullname: await input({
@@ -282,6 +294,12 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
         }),
         address: await input({
           message: "Institution/School Address:",
+          default: "",
+          required: true,
+        }),
+        regis_number: await input({
+          message:
+            "Institution/School Registration Number (NPSN/PT.Code/ID Universitas):",
           default: "",
           required: true,
         }),
@@ -332,6 +350,48 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
           required: true,
         }),
       },
+      class_seed: {
+        label: await input({
+          message: "Class Name:",
+          default: "",
+          required: true,
+        }),
+        academic_year: await input({
+          message: "Class Academic Year (e.g: 2024/2025):",
+          default: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
+          required: true,
+        }),
+      },
+      mentor: {
+        fullname: await input({
+          message: "Mentor/Teacher Full Name:",
+          default: "",
+          required: true,
+        }),
+        username: await input({
+          message: "Mentor/Teacher Username:",
+          default: "",
+          required: true,
+        }),
+        email: await input({
+          message: "Mentor/Teacher Email:",
+          default: "",
+          required: true,
+        }),
+        password: await password({
+          message: "Mentor/Teacher Password:",
+          default: "",
+          required: true,
+        }),
+        title: await input({
+          message: "Mentor/Teacher Title (e.g: S.Pd, M.Pd, etc):",
+          default: "-",
+        }),
+        specialization: await input({
+          message: "Mentor/Teacher Specialization (e.g: Computer and Network Engineering, etc):",
+          default: "-",
+        }),
+      },
     };
     appsetupwizardcase = appsetupwizard;
   }
@@ -343,19 +403,24 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
         image: "ghcr.io/tkjskanesga/prakerin-hub:" + app_version,
         container_name: "prakerin-hub-app",
         restart: "unless-stopped",
+        depends_on: {
+          database: {
+            condition: "service_healthy",
+          },
+        },
         environment: [
           // App
           `APP_DEBUG=${app_debug === "Y" ? "true" : "false"}`,
           `APP_JWT_SECRET=${jwt_and_seishiro_passkey.jwt}`,
           `APP_SEISHIRO_PASSKEY=${jwt_and_seishiro_passkey.seishiro}`,
           // Database
-          `DB_HOST=${db_port === "none" ? "database" : "localhost"}`,
-          `DB_PORT=${db_port === "none" ? "5432" : db_port}`,
+          `DB_HOST=database`,
+          `DB_PORT=5432`,
           `DB_USERNAME=${db_username}`,
           `DB_PASSWORD=${db_password}`,
           `DB_DATABASE=${db_database}`,
           // Minio
-          `S3_ENDPOINT=${minio_port === "none" ? "minio" : "localhost"}:${minio_port === "none" ? "9000" : minio_port}`,
+          `S3_ENDPOINT=http://minio:9000`,
           `S3_ACCESS_KEY_ID=${minio_username}`,
           `S3_SECRET_ACCESS_KEY=${minio_password}`,
           `S3_BUCKET=${minio_bucket}`,
@@ -365,7 +430,7 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
           `TURNSTILE_SITE_KEY=${turnstile_site_key}`,
           `TURNSTILE_SECRET_KEY=${turnstile_secret_key}`,
           // Gotenberg
-          `GOTENBERG_URL=${gotenberg_port === "none" ? "http://gotenberg" : "http://localhost"}:${gotenberg_port === "none" ? "3000" : gotenberg_port}`,
+          `GOTENBERG_URL=http://gotenberg:3000`,
         ],
         ports: [`${app_port}:3000`],
         networks: ["prakerin-hub-network"],
@@ -379,6 +444,12 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
           `POSTGRES_PASSWORD=${db_password}`,
           `POSTGRES_DB=${db_database}`,
         ],
+        healthcheck: {
+          test: ["CMD-SHELL", `pg_isready -U ${db_username} -d ${db_database}`],
+          interval: "5s",
+          timeout: "5s",
+          retries: "5",
+        },
         ports: [db_port === "none" ? undefined : `${db_port}:5432`].filter(
           (a) => a !== undefined,
         ),
@@ -455,7 +526,17 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
     structureComposeContainer.services.app.environment.join("\n");
   fs.writeFileSync(
     "./.env",
-    `# Prod Env!\n# Don't share this file to public!\n${toFileEnv}`,
+    String(`# Don't share this file to public!\n${toFileEnv}`)
+      .replace("DB_HOST=database", "DB_HOST=localhost")
+      .replace("DB_PORT=5432", `DB_PORT=${db_port}`)
+      .replace(
+        "S3_ENDPOINT=http://minio:9000",
+        `S3_ENDPOINT=http://localhost:${minio_port}`,
+      )
+      .replace(
+        "GOTENBERG_URL=http://gotenberg:3000",
+        `GOTENBERG_URL=http://localhost:${gotenberg_port}`,
+      ),
   );
 
   // All installed manually
@@ -471,46 +552,91 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
   // Running docker/podman compose
   const executed = `${container_type} compose -f ${docker_compose_file} up -d`;
   console.log(chalk.bold("\n [Running] → [Running Docker/Podman Compose]"));
-  console.log(chalk.gray(`\n ~$ ${executed}\n`));
+  console.log(chalk.gray(`~$ ${executed}\n`));
   execSync(executed, { stdio: "inherit" });
 
   // Waiting for database to be ready
   console.log(chalk.bold("\n [Waiting] → [Waiting for database to be ready]"));
-  console.log(chalk.gray(`\n Waiting for 90 seconds...\n`));
-  await new Promise((resolve) => setTimeout(resolve, 90000));
+
+  await waitOn({
+    resources: [`tcp:localhost:${db_port}`],
+    timeout: 120000, // 2 minutes
+    interval: 1000,
+  });
+  console.log(chalk.gray(`Waiting warm up for 5 seconds...`));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   // Running migration
   const executedMigration = isBunRuntime
     ? "bunx drizzle-kit migrate"
     : "npx drizzle-kit migrate";
   console.log(chalk.bold("\n [Running] → [Running Migration]"));
-  console.log(chalk.gray(`\n ~$ ${executedMigration}\n`));
-  execSync(executedMigration, { stdio: "inherit" });
+  console.log(chalk.gray(`~$ ${executedMigration}\n`));
+  try {
+    execSync(executedMigration, {
+      env: {
+        ...process.env,
+        DB_HOST: "localhost",
+        DB_PORT: db_port,
+        DB_USER: db_username,
+        DB_PASSWORD: db_password,
+      },
+      shell: true,
+      stdio: "inherit",
+    });
+  } catch (error) {
+    console.log(chalk.red("Error running migration:", error));
+    console.log(chalk.gray("Try again in 5 seconds..."));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    execSync(executedMigration, {
+      env: {
+        ...process.env,
+        DB_HOST: "localhost",
+        DB_PORT: db_port,
+        DB_USER: db_username,
+        DB_PASSWORD: db_password,
+      },
+      shell: true,
+      stdio: "inherit",
+    });
+  }
 
   // Running seed
   if (!!appsetupwizardcase) {
-    console.log(chalk.bold("\n [Running] → [Running Seed]"));
-    console.log(chalk.gray(`\n Insert admin...\n`));
-    await db.insert(usersSchema).values({
-      fullname: appsetupwizardcase.admin.fullname,
-      username: appsetupwizardcase.admin.username,
-      password: HashPassword(appsetupwizardcase.admin.password),
-      email: appsetupwizardcase.admin.email,
-      role: "default-admin",
-    });
-    console.log(chalk.gray(`\n Insert school default...\n`));
-    await db.insert(institutionsSchema).values({
-      name: appsetupwizardcase.institution.name,
-      address: appsetupwizardcase.institution.address,
-      city: appsetupwizardcase.institution.city,
-      state: appsetupwizardcase.institution.state,
-      zip: appsetupwizardcase.institution.zip,
-      country: appsetupwizardcase.institution.country,
-      phone: appsetupwizardcase.institution.phone,
-      email: appsetupwizardcase.institution.email,
-      website: appsetupwizardcase.institution.website,
-      logo: appsetupwizardcase.institution.logo,
-      status: appsetupwizardcase.institution.status,
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    console.log(chalk.bold("\n\n [Running] → [Running Seed]"));
+    console.log(chalk.gray(`Copy all to seeder.json...`));
+    fs.writeFileSync(
+      "./seeder.json",
+      JSON.stringify({
+        ...appsetupwizardcase,
+        admin: {
+          ...appsetupwizardcase.admin,
+          password: await HashPassword(appsetupwizardcase.admin.password),
+        },
+        mentor: {
+          ...appsetupwizardcase.mentor,
+          password: await HashPassword(appsetupwizardcase.mentor.password),
+        }
+      }, null, 2),
+    );
+    console.log(chalk.gray(`Seeder.json created successfully!`));
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const executedSeeder = isBunRuntime ? "bun seeder.js" : "node seeder.js";
+    console.log(chalk.gray(`~$ ${executedSeeder}\n`));
+    execSync(executedSeeder, {
+      env: {
+        ...process.env,
+        DB_HOST: "localhost",
+        DB_PORT: db_port,
+        DB_USER: db_username,
+        DB_PASSWORD: db_password,
+      },
+      shell: true,
+      stdio: "inherit",
     });
   }
 

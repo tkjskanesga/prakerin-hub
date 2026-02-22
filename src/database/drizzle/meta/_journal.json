@@ -8,6 +8,13 @@
       "when": 1771691960253,
       "tag": "0000_greedy_hiroim",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771733371713,
+      "tag": "0001_right_spitfire",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { RegistryBuilder } from "seishiro";
 
 const registry = new RegistryBuilder({
-  noMidGen: true, // No Middleware Generate Response Context
+  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
 });
 
 // Student / Participant - Profile

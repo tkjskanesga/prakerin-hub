@@ -44,6 +44,8 @@ chmod +x ./setup.sh
 ./setup.sh
 ```
 
+Ikuti instruksi yang diberikan oleh auto installer, pastikan docker & bun sudah terinstall.
+
 ### Menggunakan Docker Compose
 
 Aplikasi berjalan di port `3000` dan tidak memerlukan mounting volume khusus pada container aplikasi. Berikut contoh konfigurasi `docker-compose.yml`:
@@ -123,6 +125,22 @@ volumes:
 
 networks:
   prakerin_hub_network:
+```
+
+Untuk migrasi silahkan jalankan :
+
+```bash
+bun ./migrate.js
+# Atau
+bunx drizzle-kit migrate
+```
+
+### Reset Password
+
+Untuk reset password silahkan jalankan :
+
+```bash
+bun ./reset-pw.js
 ```
 
 ### Deployment Lainnya

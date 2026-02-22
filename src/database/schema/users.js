@@ -15,7 +15,7 @@ const users = pgTable("users", {
   username: text("username").unique().notNull(), // Unique Username
   password: text("password").notNull(), // Hash Password (!)
   address: text("address"), // Address
-  email: text("email").notNull(), // Email
+  email: text("email").unique().notNull(), // Email
   phone: text("phone"), // Phone
   role: usersRoleEnum("role").default("participant"), // Role ["participant", "mentor", "mentor-high", "admin", "default-admin"]
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At

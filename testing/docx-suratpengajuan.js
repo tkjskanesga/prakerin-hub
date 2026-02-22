@@ -1,26 +1,30 @@
 const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
-const ImageModule = require("docxtemplater-image-module");
+const ImageModule = require("docxtemplater-image-module-free");
 const fs = require("fs");
 const path = require("path");
 
 const content = fs.readFileSync(
   path.resolve(__dirname, "../template/suratpengajuanpkl.docx"),
 );
+const signed = fs.readFileSync(
+  path.resolve(__dirname, "../template/signed.png")
+);
 
 const zip = new PizZip(content);
 
+const imageOptions = {
+  getImage: (tagValue) => {
+    return signed;
+  },
+  getSize: () => {
+    return [150, 150/2];
+  },
+}
+
 const doc = new Docxtemplater(zip, {
   modules: [
-    // new ImageModule({
-    //   getImage: (tagValue) => {
-    //     return fs.readFileSync(path.resolve(__dirname, tagValue));
-    //   },
-    //   getSize: (imgBuffer) => {
-    //     return [100, 100];
-    //   },
-    //   centered: true,
-    // })
+    new ImageModule(imageOptions)
   ],
   paragraphLoop: true,
   linebreaks: true,
@@ -28,26 +32,26 @@ const doc = new Docxtemplater(zip, {
 
 try {
   doc.render({
-    short_date: "17 Februari 2026",
-    office: "PT. Maju Mundur Digital",
-    classes: "XI Administrasi Perkantoran 1",
+    short_date: "22 Febuari 2026",
+    office: "PT. Tonggak Teknologi Netikom",
+    classes: "XI TKJ 2",
     participants: [
       {
         key: "1",
         student_national: "0051234567",
         student_number: "14042",
-        fullname: "RIZA NUR FAJRI",
+        fullname: "Alif Nur Rahmadhani N.",
         gender: "L",
       },
       {
         key: "2",
         student_national: "0059876543",
         student_number: "14021",
-        fullname: "ANDRIYAN",
+        fullname: "Andriyan Saputra",
         gender: "L",
       },
     ],
-    mailsigned: "./image.png",
+    mailsigned: "image.png",
   });
 
   const finalBuf = doc.getZip().generate({

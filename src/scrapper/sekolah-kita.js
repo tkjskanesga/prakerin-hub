@@ -1,7 +1,9 @@
 import axios from "axios";
 
 export async function FindCardSearch({
-  type_school = "SMK",
+  school_type = "SMK",
+  school_status = "Negeri",
+  kabupaten_kota = "",
   search = "",
   page = 0,
 }) {
@@ -12,9 +14,9 @@ export async function FindCardSearch({
         page: page,
         size: 20,
         keyword: String(search),
-        kabupaten_kota: "",
-        bentuk_pendidikan: String(type_school),
-        status_sekolah: "",
+        kabupaten_kota: String(kabupaten_kota || "")?.trim(),
+        bentuk_pendidikan: String(school_type || "")?.trim()?.toUpperCase(),
+        status_sekolah: String(school_status || "")?.trim()?.toUpperCase(),
       },
       {
         headers: {
@@ -31,16 +33,14 @@ export async function FindCardSearch({
         list: schoolList.map((items) => {
           return {
             id: String(items?.sekolah_id || ""),
-            detail:
-              "/api/fetcher/school/sekolah-kita?id=" +
-              String(items?.sekolah_id || ""),
+            detail: "/api/get-school?id=" + String(items?.sekolah_id || "").toLowerCase(),
             name: String(items?.nama || ""),
             image: String(items?.path_file || ""),
-            code_pos: String(items?.kode_pos || ""),
+            postal_code: String(items?.kode_pos || ""),
             address: String(items?.alamat_jalan || ""),
-            npsn: String(items?.npsn || "").toLowerCase(),
-            school_type: String(items?.bentuk_pendidikan || "").toLowerCase(),
-            school_status: String(items?.status_sekolah || "").toLowerCase(),
+            regis_number: String(items?.npsn || "").toLowerCase(),
+            type: String(items?.bentuk_pendidikan || "").toLowerCase(),
+            status: String(items?.status_sekolah || "").toLowerCase(),
           };
         }),
       },
@@ -58,7 +58,7 @@ export async function GetDetailSchool({ id = "" }) {
   try {
     const reqdata = await axios.get(
       "https://sekolah.data.kemendikdasmen.go.id/v1/sekolah-service/sekolah/full-detail/" +
-        String(id).toUpperCase(),
+      String(id).toUpperCase(),
       {
         headers: {
           "User-Agent":
@@ -75,16 +75,16 @@ export async function GetDetailSchool({ id = "" }) {
         id: String(schoolDetail?.sekolah_id || ""),
         name: String(schoolDetail?.nama || ""),
         address: String(schoolDetail?.alamat_jalan || ""),
-        npsn: String(schoolDetail?.npsn || "").toLowerCase(),
-        code_pos: String(schoolDetail?.kode_pos || ""),
-        school_type: String(
+        regis_number: String(schoolDetail?.npsn || "").toLowerCase(),
+        postal_code: String(schoolDetail?.kode_pos || ""),
+        type: String(
           schoolDetail?.bentuk_pendidikan || "",
         ).toLowerCase(),
-        school_status: String(schoolDetail?.status_sekolah || "").toLowerCase(),
+        status: String(schoolDetail?.status_sekolah || "").toLowerCase(),
         web: String(schoolDetail?.website || ""),
         email: String(schoolDetail?.email || ""),
         subdistrict: String(schoolDetail?.kecamatan || ""),
-        principal: String(returnJson?.kepala_sekolah[0]?.nama || ""),
+        leader_name: String(returnJson?.kepala_sekolah[0]?.nama || ""),
       },
     };
   } catch (e) {
