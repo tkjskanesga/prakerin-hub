@@ -5,9 +5,7 @@ import mentorRegistry from "./mentor";
 import participantRegistry from "./participant";
 import middlewareRegistry from "./middleware";
 
-const registry = new RegistryBuilder({
-  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
-});
+const registry = new RegistryBuilder();
 
 registry.use(adminRegistry);
 registry.use(mentorRegistry);

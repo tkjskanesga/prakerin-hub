@@ -1,8 +1,6 @@
 import { RegistryBuilder } from "seishiro";
 
-const registry = new RegistryBuilder({
-  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
-});
+const registry = new RegistryBuilder();
 
 // Student / Participant - Profile
 registry.set("participant:profile-get", () => {}, null); // Detail Profil Diri

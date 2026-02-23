@@ -1,0 +1,51 @@
+#cloud-config
+hostname: prakerinhub
+manage_etc_hosts: true
+manage_resolv_conf: true
+nameservers:
+  addresses: [8.8.8.8, 1.1.1.1]
+user: prakerinhub
+password: prakerinhub123
+chpasswd: { expire: False }
+sudo: ALL=(ALL) NOPASSWD:ALL
+groups: [docker]
+shell: /bin/bash
+
+runcmd:
+  # 1. Update & Upgrade
+  - sudo apt update && sudo apt upgrade -y
+
+  # 2. Set Swap File
+  - sudo fallocate -l 2G /swapfile
+  - sudo chmod 600 /swapfile
+  - sudo mkswap /swapfile
+  - sudo swapon /swapfile
+  - sudo echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
+  # 3. Setup Keyring Docker
+  - apt-get update
+  - apt-get install -y ca-certificates curl
+  - install -m 0755 -d /etc/apt/keyrings
+
+  # 4. Add Docker's official GPG key
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+
+  # 5. Add the repository to Apt sources (Format DEB822)
+  - |
+    cat <<EOF > /etc/apt/sources.list.d/docker.sources
+    Types: deb
+    URIs: https://download.docker.com/linux/ubuntu
+    Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+    Components: stable
+    Signed-By: /etc/apt/keyrings/docker.asc
+    EOF
+  
+  # 5. Install Docker Engine & Compose
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # 6. Pastikan Service Jalan & User masuk grup Docker
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker prakerinhub

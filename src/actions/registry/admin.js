@@ -1,8 +1,6 @@
 import { RegistryBuilder } from "seishiro";
 
-const registry = new RegistryBuilder({
-  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
-});
+const registry = new RegistryBuilder();
 
 // Admin Platform - School Controls
 registry.set("admin:school-list", () => {}, null); // List Sekolah

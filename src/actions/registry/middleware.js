@@ -1,8 +1,6 @@
 import { RegistryBuilder } from "seishiro";
 
-const registry = new RegistryBuilder({
-  middlewareNoContextRes: true, // Disable Auto Response Context HTTP
-});
+const registry = new RegistryBuilder();
 
 // Middleware
 registry.set("mid:turnstile-widget", () => {}); // Turnstile Widget

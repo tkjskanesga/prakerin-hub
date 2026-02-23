@@ -1,8 +1,6 @@
 import { RegistryBuilder } from "seishiro";
 
-const registry = new RegistryBuilder({
-  noMidGen: true, // No Middleware Generate Response Context
-});
+const registry = new RegistryBuilder();
 
 // Teach / Mentor Admin - Profile School
 registry.set("mentor:profile-school-get", () => {}, null); // Detail Profil Sekolah
