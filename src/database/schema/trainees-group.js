@@ -1,12 +1,12 @@
 import { pgTable, uuid, text, timestamp, pgEnum, jsonb, varchar, boolean } from "drizzle-orm/pg-core";
-import offices from "./offices"; // Tempat PKL/Partner
-import users from "./users";    // Untuk audit (siapa yang buat & acc)
+import { offices } from "./offices"; // Tempat PKL/Partner
+import { users } from "./users";    // Untuk audit (siapa yang buat & acc)
 import globalVariable from "@/lib/global-variable";
 
 // Enum untuk status grup PKL
 export const groupStatusEnum = pgEnum("group_status", globalVariable.db.trainees_status);
 
-const traineesGroups = pgTable("trainees_groups", {
+export const traineesGroups = pgTable("trainees_groups", {
   id: uuid("id").primaryKey().defaultRandom(),
   // Relasi ke Partner (Kantor/Tempat PKL)
   office_id: uuid("office_id").references(() => offices.id).notNull(),
@@ -31,5 +31,3 @@ const traineesGroups = pgTable("trainees_groups", {
   updated_at: timestamp("updated_at", { withTimezone: true }),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
 });
-
-export default traineesGroups;

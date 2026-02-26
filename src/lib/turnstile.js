@@ -5,7 +5,7 @@ import logger from "./logger";
 const disabledTurnstile = process.env.TURNSTILE_DISABLE === "true";
 
 async function verifyTurnstile({ token, ip }) {
-  const logaction = logger.child({ system: "turnstile" })
+  const logaction = logger.child({ system: "turnstile" });
   const formData = new FormData();
   formData.append("secret", process.env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
@@ -30,7 +30,7 @@ async function verifyTurnstile({ token, ip }) {
     };
   } catch (error) {
     logaction.error({ error });
-    if(error.response) {
+    if (error.response) {
       return {
         isSuccess: false,
         isError: true,

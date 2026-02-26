@@ -8,7 +8,7 @@ const content = fs.readFileSync(
   path.resolve(__dirname, "../template/suratpengajuanpkl.docx"),
 );
 const signed = fs.readFileSync(
-  path.resolve(__dirname, "../template/signed.png")
+  path.resolve(__dirname, "../template/signed.png"),
 );
 
 const zip = new PizZip(content);
@@ -18,14 +18,12 @@ const imageOptions = {
     return signed;
   },
   getSize: () => {
-    return [150, 150/2];
+    return [150, 150 / 2];
   },
-}
+};
 
 const doc = new Docxtemplater(zip, {
-  modules: [
-    new ImageModule(imageOptions)
-  ],
+  modules: [new ImageModule(imageOptions)],
   paragraphLoop: true,
   linebreaks: true,
 });

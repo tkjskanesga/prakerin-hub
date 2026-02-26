@@ -1,13 +1,10 @@
 import { pgTable, uuid, text, timestamp, integer, pgEnum } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import participants from "./participants";
-import mentors from "./mentors";
-import institutions from "./institutions";
+import { institutions } from "./institutions";
 import globalVariable from "@/lib/global-variable";
 
 export const usersRoleEnum = pgEnum("users_role", globalVariable.db.role_users);
 
-const users = pgTable("users", {
+export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(), // User ID
   institutions_id: uuid("institutions_id").references(() => institutions.id), // Institutions ID
   fullname: text("fullname").notNull(), // Fullname
@@ -23,16 +20,3 @@ const users = pgTable("users", {
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });
-
-export default users;
-
-export const usersRelations = relations(users, ({ one }) => ({
-  participantProfile: one(participants, {
-    fields: [users.id],
-    references: [participants.user_id],
-  }),
-  mentorProfile: one(mentors, {
-    fields: [users.id],
-    references: [mentors.user_id],
-  }),
-}));

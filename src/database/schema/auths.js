@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
-import users from "./users";
+import { users } from "./users";
 
-const auths = pgTable("auths", {
+export const auths = pgTable("auths", {
   id: uuid("id").primaryKey().defaultRandom(), // Auth ID
   user_id: uuid("user_id").references(() => users.id), // User ID
   ip: text("ip").notNull(), // IP Address
@@ -10,5 +10,3 @@ const auths = pgTable("auths", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
 });
-
-export default auths;

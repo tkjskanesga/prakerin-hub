@@ -1,9 +1,8 @@
 import { pgTable, uuid, text, timestamp, date, varchar } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import users from "./users";
-import classes from "./classes";
+import { users } from "./users";
+import { classes } from "./classes";
 
-const participants = pgTable("participants", {
+export const participants = pgTable("participants", {
   id: uuid("id").primaryKey().defaultRandom(), // Participant ID
   user_id: uuid("user_id").references(() => users.id).unique().notNull(), // User ID
   class_id: uuid("class_id").references(() => classes.id), // Class ID (Optional)
@@ -17,9 +16,3 @@ const participants = pgTable("participants", {
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });
-
-export default participants;
-
-export const participantsRelations = relations(participants, ({ one }) => ({
-  user: one(users, { fields: [participants.user_id], references: [users.id] }),
-}));

@@ -22,11 +22,18 @@ export function toAuthData(tokenStr = "") {
     const extractedData = jwt.verify(tokenStr, passkey);
     return {
       ...extractedData,
-      error: false,
+      error: undefined,
     };
   } catch (e) {
+    if (e.name === "TokenExpiredError") {
+      return {
+        error: "jwt:jwt-expired",
+      };
+    }
     console.log("[Jsonwebtoken]:", e);
-    return { error: true };
+    return {
+      error: "jwt:jwt-invalid",
+    };
   }
 }
 

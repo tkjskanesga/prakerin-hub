@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
-const offices = pgTable("offices", {
+export const offices = pgTable("offices", {
   id: uuid("id").primaryKey().defaultRandom(), // Office ID
   icon: text("icon"), // Office Icon
   name: text("name").notNull(), // Office Name
@@ -17,5 +17,3 @@ const offices = pgTable("offices", {
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });
-
-export default offices;

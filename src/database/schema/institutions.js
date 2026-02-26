@@ -4,7 +4,7 @@ import globalVariable from "@/lib/global-variable";
 export const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type);
 export const institutionsStatusEnum = pgEnum("status", globalVariable.db.school_status);
 
-const institutions = pgTable("institutions", {
+export const institutions = pgTable("institutions", {
   id: uuid("id").primaryKey().defaultRandom(), // ID
   regis_number: text("regis_number").unique().notNull(), // NPSN (Sekolah) / PT.Code (Universitas)
   icon: text("icon").default(null), // Icon (?)
@@ -22,5 +22,3 @@ const institutions = pgTable("institutions", {
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });
-
-export default institutions;

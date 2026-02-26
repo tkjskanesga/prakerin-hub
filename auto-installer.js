@@ -8,8 +8,8 @@ import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
-import usersSchema from "./src/database/schema/users";
-import institutionsSchema from "./src/database/schema/institutions";
+import { users as usersSchema } from "./src/database/schema/users";
+import { institutions as institutionsSchema } from "./src/database/schema/institutions";
 import db from "./src/database/db";
 import { HashPassword } from "@/lib/bcrypt";
 
@@ -73,8 +73,8 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
   const jwt_and_seishiro_passkey = generateJwtAndSeishiroPasskey();
   console.log(
     chalk.green("✓ ") +
-    "Seishiro Passkey : " +
-    jwt_and_seishiro_passkey.seishiro,
+      "Seishiro Passkey : " +
+      jwt_and_seishiro_passkey.seishiro,
   );
   console.log(
     chalk.green("✓ ") + "Jsonwebtoken     : " + jwt_and_seishiro_passkey.jwt,
@@ -388,7 +388,8 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
           default: "-",
         }),
         specialization: await input({
-          message: "Mentor/Teacher Specialization (e.g: Computer and Network Engineering, etc):",
+          message:
+            "Mentor/Teacher Specialization (e.g: Computer and Network Engineering, etc):",
           default: "-",
         }),
       },
@@ -609,17 +610,21 @@ Repo: ${chalk.underline(chalk.gray("https://github.com/tkjskanesga/prakerin-hub"
     console.log(chalk.gray(`Copy all to seeder.json...`));
     fs.writeFileSync(
       "./seeder.json",
-      JSON.stringify({
-        ...appsetupwizardcase,
-        admin: {
-          ...appsetupwizardcase.admin,
-          password: await HashPassword(appsetupwizardcase.admin.password),
+      JSON.stringify(
+        {
+          ...appsetupwizardcase,
+          admin: {
+            ...appsetupwizardcase.admin,
+            password: await HashPassword(appsetupwizardcase.admin.password),
+          },
+          mentor: {
+            ...appsetupwizardcase.mentor,
+            password: await HashPassword(appsetupwizardcase.mentor.password),
+          },
         },
-        mentor: {
-          ...appsetupwizardcase.mentor,
-          password: await HashPassword(appsetupwizardcase.mentor.password),
-        }
-      }, null, 2),
+        null,
+        2,
+      ),
     );
     console.log(chalk.gray(`Seeder.json created successfully!`));
 

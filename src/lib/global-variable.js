@@ -46,6 +46,33 @@ export default {
     default_minimum_group: 1, // 1 person
     default_maximum_group: 4, // 4 person
   },
+  context_info: {
+    role_slug: {
+      "participant": "participant", // Student
+      "mentor": "mentor", // Teacher / Dosen biasa / partner
+      "mentor-high": "mentor", // Teacher Admin / Dosen Admin
+      "admin": "admin", // Admin cadangan
+      "default-admin": "admin", // Admin bawaan
+    },
+    school_type_slug: {
+      smk: "SMK (Sekolah Menengah Kejuruan)",
+      sma: "SMA (Sekolah Menengah Atas)",
+      ma: "MA (Madrasah Aliyah)",
+      smalb: "SMALB (Sekolah Menengah Atas Luar Biasa)",
+      kuliah: "Kuliah (Perguruan Tinggi)",
+      other: "Lainnya",
+    },
+    school_status_slug: {
+      negeri: "Negeri",
+      swasta: "Swasta",
+      universitas: "Universitas",
+      other: "Lainnya",
+    },
+  },
+  authorization: {
+    name: "auth-prakerin",
+    max_age: 60 * 60 * 24 * 80, // 80 Day's
+  },
   scrapper_SekolahKita: {
     school_type: [
       "SMK", // SMK

@@ -1,7 +1,7 @@
-CREATE TYPE "public"."activity_type" AS ENUM('action', 'chat', 'file');--> statement-breakpoint
-CREATE TYPE "public"."group_status" AS ENUM('draft', 'deleting', 'submission', 'rejected', 'letter_acceptance', 'letter_submission', 'rejection_pkl', 'acceptance_pkl', 'ongoing', 'completed');--> statement-breakpoint
 CREATE TYPE "public"."status" AS ENUM('negeri', 'swasta', 'universitas', 'other');--> statement-breakpoint
 CREATE TYPE "public"."type" AS ENUM('smk', 'sma', 'ma', 'smalb', 'kuliah', 'other');--> statement-breakpoint
+CREATE TYPE "public"."activity_type" AS ENUM('action', 'chat', 'file');--> statement-breakpoint
+CREATE TYPE "public"."group_status" AS ENUM('draft', 'deleting', 'submission', 'rejected', 'letter_acceptance', 'letter_submission', 'rejection_pkl', 'acceptance_pkl', 'ongoing', 'completed');--> statement-breakpoint
 CREATE TYPE "public"."participant_type" AS ENUM('participant', 'partner');--> statement-breakpoint
 CREATE TYPE "public"."users_role" AS ENUM('participant', 'mentor', 'mentor-high', 'admin', 'default-admin');--> statement-breakpoint
 CREATE TABLE "auths" (
@@ -25,15 +25,15 @@ CREATE TABLE "classes" (
 CREATE TABLE "institutions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"regis_number" text NOT NULL,
-	"icon" text DEFAULT '',
+	"icon" text DEFAULT null,
 	"name" text NOT NULL,
 	"address" text NOT NULL,
 	"postal_code" text NOT NULL,
 	"leader_name" text NOT NULL,
-	"web" text DEFAULT '',
-	"phone" text DEFAULT '',
-	"email" text DEFAULT '',
-	"subdistrict" text DEFAULT '',
+	"web" text DEFAULT '-',
+	"phone" text DEFAULT '-',
+	"email" text DEFAULT '-',
+	"subdistrict" text DEFAULT '-',
 	"type" "type",
 	"status" "status",
 	"created_at" timestamp with time zone DEFAULT now(),
@@ -55,8 +55,8 @@ CREATE TABLE "mentors" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"class_id" uuid,
-	"title" text,
-	"specialization" text,
+	"title" text DEFAULT '-',
+	"specialization" text DEFAULT '-',
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
@@ -149,7 +149,8 @@ CREATE TABLE "users" (
 	"update_total" integer DEFAULT 0,
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "users_username_unique" UNIQUE("username")
+	CONSTRAINT "users_username_unique" UNIQUE("username"),
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 ALTER TABLE "auths" ADD CONSTRAINT "auths_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

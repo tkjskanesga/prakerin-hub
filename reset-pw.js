@@ -26,26 +26,20 @@ async function main() {
       {
         name: "Exit",
         value: "exit",
-      }
+      },
     ],
-  })
+  });
 
   let queryWhere = null;
   if (roleSelect === "admin") {
-    queryWhere = or(
-      eq(users.role, "admin"),
-      eq(users.role, "default-admin")
-    );
+    queryWhere = or(eq(users.role, "admin"), eq(users.role, "default-admin"));
   } else if (roleSelect === "mentor") {
-    queryWhere = or(
-      eq(users.role, "mentor"),
-      eq(users.role, "mentor-high")
-    );
+    queryWhere = or(eq(users.role, "mentor"), eq(users.role, "mentor-high"));
   } else if (roleSelect === "participant") {
     queryWhere = eq(users.role, "participant");
   }
   if (roleSelect === "exit") {
-    console.clear()
+    console.clear();
     console.log(chalk.green("✓ ") + "bye!");
     process.exit(0);
   }
@@ -67,7 +61,7 @@ async function searchUser(queryWhere) {
     choices: [
       ...user.map((user) => {
         return {
-          name: user.fullname,
+          name: `${user.fullname} (${user.username}) - ${user.email}`,
           value: user.username,
         };
       }),
@@ -79,9 +73,9 @@ async function searchUser(queryWhere) {
       {
         name: "Back",
         value: "back",
-      }
+      },
     ],
-  })
+  });
   if (selectUsername === "refresh") {
     searchUser(queryWhere);
   } else if (selectUsername === "back") {
@@ -122,13 +116,16 @@ async function resetPassword(username) {
     return;
   }
   console.clear();
-  await db.update(users).set({
-    password: await HashPassword(newPassword),
-    updated_at: new Date(),
-  }).where(eq(users.username, username));
+  await db
+    .update(users)
+    .set({
+      password: await HashPassword(newPassword),
+      updated_at: new Date(),
+    })
+    .where(eq(users.username, username));
   console.log(" " + chalk.green("✓ ") + "Success resetting password!");
   await new Promise((resolve) => setTimeout(resolve, 5000));
   main();
 }
 
-main()
+main();

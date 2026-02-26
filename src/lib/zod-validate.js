@@ -1,14 +1,20 @@
 function ErrorZodExtract(strError) {
-  const [msg, ...params] = String(strError || "").trim().split("|");
+  const [msg, ...params] = String(strError || "")
+    .trim()
+    .split("|");
 
   const error_params = Object.fromEntries(
-    params.map(line => line.split(":"))
+    params.map((line) => line.split(":")),
   );
 
   return { error: msg, error_params };
 }
 
-export default function ValidatorContent(zodObject, data = {}, schemaProtocol = "") {
+export default function ValidatorContent(
+  schemaProtocol = "",
+  zodObject,
+  data = {},
+) {
   const dataInfo = zodObject.safeParse(data);
 
   if (dataInfo.success) return null;

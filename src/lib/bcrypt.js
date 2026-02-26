@@ -2,7 +2,10 @@ import bcrypt from "bcrypt";
 import logger from "./logger";
 
 export async function HashPassword(password) {
-  const logaction = logger.child({ path: "lib/bcrypt", function: "HashPassword" })
+  const logaction = logger.child({
+    path: "lib/bcrypt",
+    function: "HashPassword",
+  });
   try {
     logaction.info({ password });
     const hash = await bcrypt.hash(password, 10);
@@ -15,7 +18,10 @@ export async function HashPassword(password) {
 }
 
 export async function ComparePassword(password, hash) {
-  const logaction = logger.child({ path: "lib/bcrypt", function: "ComparePassword" })
+  const logaction = logger.child({
+    path: "lib/bcrypt",
+    function: "ComparePassword",
+  });
   try {
     logaction.info({ password, hash });
     const result = await bcrypt.compare(password, hash);

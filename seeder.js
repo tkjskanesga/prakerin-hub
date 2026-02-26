@@ -36,7 +36,10 @@ async function main() {
 
   if (!institution_data) {
     console.log("[Seeder]: Institution not found, inserting...");
-    const [dataInstitution] = await db.insert(institutions).values(institution).returning({ id: institutions.id });
+    const [dataInstitution] = await db
+      .insert(institutions)
+      .values(institution)
+      .returning({ id: institutions.id });
     institution_id = dataInstitution.id;
   } else {
     institution_id = institution_data.id;
@@ -44,17 +47,23 @@ async function main() {
 
   console.log("[Seeder]: Inserting class...");
   // Insert class
-  const [dataClass] = await db.insert(classes).values(class_seed).returning({ id: classes.id });
+  const [dataClass] = await db
+    .insert(classes)
+    .values(class_seed)
+    .returning({ id: classes.id });
 
   console.log("[Seeder]: Inserting mentor...");
   // Insert mentor user
-  const [dataMentors] = await db.insert(users).values({
-    fullname: mentor.fullname,
-    username: mentor.username,
-    password: mentor.password,
-    email: mentor.email,
-    role: "mentor-high",
-  }).returning({ id: users.id });
+  const [dataMentors] = await db
+    .insert(users)
+    .values({
+      fullname: mentor.fullname,
+      username: mentor.username,
+      password: mentor.password,
+      email: mentor.email,
+      role: "mentor-high",
+    })
+    .returning({ id: users.id });
 
   // Insert mentor profile
   await db.insert(mentors).values({
