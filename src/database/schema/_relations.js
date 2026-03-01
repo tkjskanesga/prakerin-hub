@@ -16,7 +16,7 @@ export const usersRelations = relations(users, ({ one }) => ({
     references: [mentors.user_id],
   }),
   institutionView: one(institutions, {
-    fields: [users.institutions_id],
+    fields: [users.institution_id],
     references: [institutions.id],
   }),
 }));

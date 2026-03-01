@@ -27,5 +27,18 @@ message.set(
 message.set("user-not-found", "User tidak ditemukan!");
 message.set("password-not-match", "Password tidak cocok, coba lagi!");
 message.set("auth-not-found", "Sesi login tidak ditemukan!");
+message.set(
+  "invalid-type-logout",
+  'Jenis logout tidak ada, hanya terdapat "{{select}}" saja!',
+);
+message.set("old-password-not-match", "Password lama tidak cocok!");
+message.set(
+  "new-password-same-before",
+  "Password baru tidak boleh sama dengan password lama!",
+);
+message.set(
+  "new-password-not-match",
+  "Password baru dan konfirmasi password tidak cocok!",
+);
 
 export default message;

@@ -19,7 +19,9 @@ CREATE TABLE "classes" (
 	"institution_id" uuid,
 	"label" text NOT NULL,
 	"academic_year" varchar(20),
-	"created_at" timestamp with time zone DEFAULT now()
+	"update_total" integer DEFAULT 0,
+	"created_at" timestamp with time zone DEFAULT now(),
+	"updated_at" timestamp with time zone
 );
 --> statement-breakpoint
 CREATE TABLE "institutions" (
@@ -36,6 +38,7 @@ CREATE TABLE "institutions" (
 	"subdistrict" text DEFAULT '-',
 	"type" "type",
 	"status" "status",
+	"update_total" integer DEFAULT 0,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
@@ -57,9 +60,6 @@ CREATE TABLE "mentors" (
 	"class_id" uuid,
 	"title" text DEFAULT '-',
 	"specialization" text DEFAULT '-',
-	"created_at" timestamp with time zone DEFAULT now(),
-	"updated_at" timestamp with time zone,
-	"deleted_at" timestamp with time zone,
 	CONSTRAINT "mentors_user_id_unique" UNIQUE("user_id")
 );
 --> statement-breakpoint
@@ -76,6 +76,7 @@ CREATE TABLE "offices" (
 	"website" text,
 	"verify" boolean DEFAULT false,
 	"verified_at" timestamp with time zone,
+	"update_total" integer DEFAULT 0,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
@@ -92,9 +93,6 @@ CREATE TABLE "participants" (
 	"birth_place" text,
 	"birth_date" date,
 	"religion" text,
-	"created_at" timestamp with time zone DEFAULT now(),
-	"updated_at" timestamp with time zone,
-	"deleted_at" timestamp with time zone,
 	CONSTRAINT "participants_user_id_unique" UNIQUE("user_id"),
 	CONSTRAINT "participants_student_national_unique" UNIQUE("student_national")
 );
@@ -121,6 +119,7 @@ CREATE TABLE "trainees_groups" (
 	"created_by" uuid,
 	"approved_by" uuid,
 	"notes" text,
+	"update_total" integer DEFAULT 0,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone

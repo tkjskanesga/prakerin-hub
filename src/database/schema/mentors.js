@@ -8,7 +8,4 @@ export const mentors = pgTable("mentors", {
   class_id: uuid("class_id").references(() => classes.id), // Class ID (Optional)
   title: text("title").default("-"), // Gelar: S.T., M.Cs, dsb
   specialization: text("specialization").default("-"), // Bidang Keahlian
-  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
-  updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
-  deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, pgEnum, jsonb, varchar, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, pgEnum, jsonb, varchar, boolean, integer } from "drizzle-orm/pg-core";
 import { offices } from "./offices"; // Tempat PKL/Partner
 import { users } from "./users";    // Untuk audit (siapa yang buat & acc)
 import globalVariable from "@/lib/global-variable";
@@ -27,6 +27,7 @@ export const traineesGroups = pgTable("trainees_groups", {
   // Catatan
   notes: text("notes"),
   // Audit & Metadata
+  update_total: integer("update_total").default(0), // Update Total
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updated_at: timestamp("updated_at", { withTimezone: true }),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),

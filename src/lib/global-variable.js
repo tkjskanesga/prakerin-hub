@@ -48,11 +48,18 @@ export default {
   },
   context_info: {
     role_slug: {
-      "participant": "participant", // Student
-      "mentor": "mentor", // Teacher / Dosen biasa / partner
+      participant: "participant", // Student
+      mentor: "mentor", // Teacher / Dosen biasa / partner
       "mentor-high": "mentor", // Teacher Admin / Dosen Admin
-      "admin": "admin", // Admin cadangan
+      admin: "admin", // Admin cadangan
       "default-admin": "admin", // Admin bawaan
+    },
+    role_label: {
+      participant: "Peserta PKL", // Student
+      mentor: "Guru / Dosen biasa / partner", // Teacher / Dosen biasa / partner
+      "mentor-high": "Guru Admin / Dosen", // Teacher Admin / Dosen Admin
+      admin: "Admin cadangan", // Admin cadangan
+      "default-admin": "Admin sistem", // Admin bawaan
     },
     school_type_slug: {
       smk: "SMK (Sekolah Menengah Kejuruan)",

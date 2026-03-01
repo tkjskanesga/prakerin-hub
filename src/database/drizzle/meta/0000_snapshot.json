@@ -1,5 +1,5 @@
 {
-  "id": "8fb7bdc9-5db0-4d00-acd4-bd1704d22210",
+  "id": "6cd4e210-b25e-4ab5-afca-2eb9aeda8b7a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -104,12 +104,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "update_total": {
+          "name": "update_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -223,6 +236,13 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
+        },
+        "update_total": {
+          "name": "update_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -373,25 +393,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'-'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -515,6 +516,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "update_total": {
+          "name": "update_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -607,25 +615,6 @@
         "religion": {
           "name": "religion",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -841,6 +830,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "update_total": {
+          "name": "update_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

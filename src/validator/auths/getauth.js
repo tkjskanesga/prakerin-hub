@@ -1,5 +1,5 @@
 import { z } from "zod";
-import seishiroZodValidator from "../../lib/zod-validate.js";
+import seishiroZodValidator from "@/lib/zod-validate.js";
 
 const GetAuthValidatorSchema = z.object({
   token: z
@@ -15,5 +15,9 @@ const GetAuthValidatorSchema = z.object({
 });
 
 export default function GetAuthValidator(data) {
-  return seishiroZodValidator("getauth", GetAuthValidatorSchema, data);
+  return seishiroZodValidator(
+    "getauth",
+    GetAuthValidatorSchema,
+    data,
+  );
 }

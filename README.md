@@ -11,7 +11,7 @@
 
 Prakerin Hub adalah sistem informasi manajemen Praktik Kerja Lapangan (PKL) dan Magang yang dirancang untuk mengotomatisasi proses administrasi pengajuan serta menyediakan fitur pelacakan (tracker) aktivitas peserta (siswa/mahasiswa).
 
-## 🧑💻 Fitur Utama:
+## Fitur Utama:
 
 - **Manajemen Pengajuan Kelompok**: Memungkinkan peserta untuk membentuk grup, menggabungkan beberapa anggota, dan melakukan pengajuan PKL secara kolektif kepada pembimbing.
 - **Integritas Data**: Untuk menjaga validitas informasi, data pengajuan yang sedang dalam proses atau telah diterima akan dikunci secara otomatis dan tidak dapat diubah kembali.
@@ -19,7 +19,7 @@ Prakerin Hub adalah sistem informasi manajemen Praktik Kerja Lapangan (PKL) dan 
 - **Pelacakan Status Transparan**: Monitoring status permohonan dengan kategori yang jelas: *Diterima*, *Tidak Diterima*, atau *Menunggu Jawaban Perusahaan*.
 - **Sistem Tracker Aktivitas**: Fitur pemantauan kegiatan harian peserta selama masa PKL. Status aktivitas dapat diperbarui oleh peserta maupun pembimbing untuk memberikan transparansi progres kerja dan memudahkan koordinasi antara pihak institusi pendidikan dan perusahaan.
 
-## 📚 Instalasi
+## Instalasi
 
 Aplikasi ini dapat diinstall menggunakan opsi Docker Compose.
 
@@ -148,6 +148,6 @@ bun ./reset-pw.js
 - **Kubernetes**: Gunakan image yang sama (`ghcr.io/tkjskanesga/prakerin-hub`) dan sesuaikan konfigurasi Environment Variables menggunakan ConfigMap/Secret, untuk saat ini belum terlalu didukung, namun dapat berjalan dengan baik.
 - **Serverless**: Aplikasi mendukung deployment di Vercel atau penyedia serverless lainnya.
 
-## 📞 Layanan Pengaduan
+## Layanan Pengaduan
 
 Jika ada masalah, bisa report atau kirim masalahnya pada [GitHub Issues](https://github.com/tkjskanesga/prakerin-hub/issues).

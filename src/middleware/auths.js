@@ -2,11 +2,14 @@ import db from "@/database/db";
 import globalVariable from "@/lib/global-variable";
 import { toAuthData, validateJWT } from "@/lib/jwt";
 import logger from "@/lib/logger";
+import { BucketOpenURL } from "@/lib/s3";
 
 export default async function AuthMiddleware({ system = {} }) {
   const logaction = logger.child({ middleware: "auths" });
   // Get JWT
-  const tokenJWT = String(system.cookies?.[globalVariable.authorization.name] || "");
+  const tokenJWT = String(
+    system.cookies?.[globalVariable.authorization.name] || "",
+  );
   // Validator JWT
   const validTokenJWT = validateJWT(tokenJWT);
   logaction.debug({ tokenJWT, validTokenJWT });
@@ -15,7 +18,7 @@ export default async function AuthMiddleware({ system = {} }) {
       redirect: "/login",
       error: "midauth:jwt-invalid",
     };
-  };
+  }
   // Extract Data JWT
   const dataJwt = toAuthData(tokenJWT);
   logaction.debug({ dataJwt });
@@ -36,7 +39,7 @@ export default async function AuthMiddleware({ system = {} }) {
           updated_at: false,
           deleted_at: false,
           institutions_id: false,
-          update_total: false
+          update_total: false,
         },
         with: {
           participantProfile: {
@@ -54,8 +57,8 @@ export default async function AuthMiddleware({ system = {} }) {
                   updated_at: false,
                   deleted_at: false,
                 },
-              }
-            }
+              },
+            },
           },
           mentorProfile: {
             columns: {
@@ -83,7 +86,9 @@ export default async function AuthMiddleware({ system = {} }) {
       error: "midauth:auth-not-found",
     };
   }
-  const userRoleType = String(globalVariable.context_info.role_slug[getAuth.user.role] || "unknown")
+  const userRoleType = String(
+    globalVariable.context_info.role_slug[getAuth.user.role] || "unknown",
+  );
   const userProfile = {
     auth: {
       id: getAuth.id,
@@ -97,32 +102,46 @@ export default async function AuthMiddleware({ system = {} }) {
       profile: {
         id: getAuth.user.id,
         fullname: getAuth.user.fullname,
-        picture_url: getAuth.user.picture_url,
+        picture_url: BucketOpenURL(getAuth.user.picture_url, "profile.png"),
         username: getAuth.user.username,
         email: getAuth.user.email,
         phone: getAuth.user.phone,
         role: getAuth.user.role,
         role_label: getAuth.user[userRoleType],
       },
-      student: getAuth.user.participantProfile ? {
-        ...getAuth.user.participantProfile,
-        class_id: undefined,
-        classes: undefined,
-      } : null,
-      class: getAuth.user.participantProfile?.classes ? {
-        ...getAuth.user.participantProfile.classes,
-      } : null,
-      mentor: getAuth.user.mentorProfile ? {
-        ...getAuth.user.mentorProfile,
-        institution: getAuth.user.mentorProfile.institution,
-      } : null,
-      institution: getAuth.user.institutionView ? {
-        ...getAuth.user.institutionView,
-        type: globalVariable.context_info.school_type_slug[getAuth.user.institutionView.type],
-        status: globalVariable.context_info.school_status_slug[getAuth.user.institutionView.status],
-      } : null,
-    }
-  }
+      student: getAuth.user.participantProfile
+        ? {
+            ...getAuth.user.participantProfile,
+            class_id: undefined,
+            classes: undefined,
+          }
+        : null,
+      class: getAuth.user.participantProfile?.classes
+        ? {
+            ...getAuth.user.participantProfile.classes,
+          }
+        : null,
+      mentor: getAuth.user.mentorProfile
+        ? {
+            ...getAuth.user.mentorProfile,
+            institution: getAuth.user.mentorProfile.institution,
+          }
+        : null,
+      institution: getAuth.user.institutionView
+        ? {
+            ...getAuth.user.institutionView,
+            icon: BucketOpenURL(getAuth.user.institutionView.icon, "icon.png"),
+            type: globalVariable.context_info.school_type_slug[
+              getAuth.user.institutionView.type
+            ],
+            status:
+              globalVariable.context_info.school_status_slug[
+                getAuth.user.institutionView.status
+              ],
+          }
+        : null,
+    },
+  };
   logaction.debug({ userProfile });
   return {
     data: userProfile,

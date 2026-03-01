@@ -10,13 +10,23 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import logger from "./logger";
 
-const endpoint = process.env.S3_ENDPOINT ? process.env.S3_ENDPOINT?.startsWith("http")
-  ? process.env.S3_ENDPOINT
-  : `http://${process.env.S3_ENDPOINT}` : `https://${process.env.S3_BUCKET}.s3.amazonaws.com`;
+const bucket = String(process.env.S3_BUCKET || "");
+const rawEndpoint = String(process.env.S3_ENDPOINT || "");
 const forcePathStyle = process.env.S3_ENDPOINT === "true" ? true : false;
+const endpoint = !rawEndpoint
+  ? `https://${bucket}.s3.amazonaws.com`
+  : rawEndpoint.startsWith("http")
+    ? rawEndpoint
+    : `http://${rawEndpoint}`;
+const isAWS = !rawEndpoint || rawEndpoint.includes("amazonaws.com");
+const readEndpoint = isAWS
+  ? `https://${bucket}.s3.amazonaws.com/{{file}}`
+  : `${endpoint}/${bucket}/{{file}}`;
 
-if(endpoint.includes("amazonaws.com") && !!forcePathStyle) {
-  logger.warn("S3 Endpoint contains 'amazonaws.com' and forcePathStyle is true, this may cause issues");
+if (endpoint.includes("amazonaws.com") && !!forcePathStyle) {
+  logger.warn(
+    "S3 Endpoint contains 'amazonaws.com' and forcePathStyle is true, this may cause issues",
+  );
 }
 
 const s3Client = new S3Client({
@@ -31,8 +41,21 @@ const s3Client = new S3Client({
 
 const BUCKET_NAME = String(process.env.S3_BUCKET || "e-pkl");
 
+export function BucketOpenURL(id, defaultID = null) {
+  if (!id && !!defaultID) {
+    return readEndpoint.replace("{{file}}", defaultID);
+  }
+  if (!id) {
+    return null;
+  }
+  return readEndpoint.replace("{{file}}", id);
+}
+
 async function ensureBucketExists() {
-  const logaction = logger.child({ system: "s3", function: "ensureBucketExists" });
+  const logaction = logger.child({
+    system: "s3",
+    function: "ensureBucketExists",
+  });
   try {
     await s3Client.send(new HeadBucketCommand({ Bucket: BUCKET_NAME }));
     return { success: true };
@@ -40,11 +63,16 @@ async function ensureBucketExists() {
     if (error.name === "NotFound" || error.$metadata?.httpStatusCode === 404) {
       logaction.debug(`Bucket ${BUCKET_NAME} does not exist. Creating...`);
       try {
-        await s3Client.send(new CreateBucketCommand({ Bucket: BUCKET_NAME }));
+        await s3Client.send(
+          new CreateBucketCommand({
+            ACL: "public-read", // Public Read
+            Bucket: BUCKET_NAME,
+          }),
+        );
         logaction.debug(`Bucket ${BUCKET_NAME} created successfully.`);
         return { success: true };
       } catch (createError) {
-        console.error("Error creating bucket:", createError);
+        logaction.error({ error: createError });
         return {
           success: false,
           error: "s3:s3-bucket-create-failed",

@@ -1,7 +1,7 @@
 # |-------------[ INFORMATION ]--------------|
 # |  Docker File For Build Image Container   |
 # |------------------------------------------|
-FROM oven/bun:1.3.4-alpine AS base
+FROM oven/bun:1.3.10-alpine AS base
 # |------------------------------------------|
 # | Stage 1 : Install All Depedency          |
 # | Install all depedency from package.json  |

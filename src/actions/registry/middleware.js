@@ -1,26 +1,26 @@
 import { RegistryBuilder } from "seishiro";
 import AuthMiddleware from "@/middleware/auths";
 import GetAuthController from "@/controllers/auths/getauth";
+import LogoutController from "@/controllers/auths/logout";
+import UpdatePasswordController from "@/controllers/auths/update-password";
+import MiddlewareInfo from "@/controllers/auths/middleware-info";
 
 const registry = new RegistryBuilder();
 
-// Middleware
-registry.set("mid:turnstile-widget", () => {
+function TurnstileWidget() {
   return {
     data: {
       script: "https://challenges.cloudflare.com/turnstile/v0/api.js",
       siteKey: String(process.env.TURNSTILE_SITE_KEY || ""),
     },
   };
-}); // Turnstile Widget
+}
+
+// Middleware
+registry.set("mid:turnstile-widget", TurnstileWidget); // Turnstile Widget
 registry.set("mid:getauth", GetAuthController); // Login
-registry.set("mid:middleware", ({ middleware }) => {
-  console.log(middleware);
-  return { data: middleware.data }
-}, AuthMiddleware); // Middleware
-registry.set("mid:update-password", () => { }, null); // Update Password
-registry.set("mid:logout", () => { }, null); // Logout
-// Wizard Setup
-registry.set("wizard:create-default-admin", () => { }, null); // Buat Akun Admin Platform Pertama!
+registry.set("mid:logout", LogoutController, AuthMiddleware); // Logout
+registry.set("mid:update-password", UpdatePasswordController, AuthMiddleware); // Update Password
+registry.set("mid:middleware", MiddlewareInfo, AuthMiddleware); // Middleware Info
 
 export default registry;

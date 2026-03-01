@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, pgEnum, timestamp, integer } from "drizzle-orm/pg-core";
 import globalVariable from "@/lib/global-variable";
 
 export const institutionsTypeEnum = pgEnum("type", globalVariable.db.school_type);
@@ -18,6 +18,7 @@ export const institutions = pgTable("institutions", {
   subdistrict: text("subdistrict").default("-"), // Kecamatan (?)
   type: institutionsTypeEnum("type"), // Jenis Sekolah (SMK, SMA, MA, MAK, Kuliah, Lainnya)
   status: institutionsStatusEnum("status"), // Status Sekolah (Negeri, Swasta, Universitas, Lainnya)
+  update_total: integer("update_total").default(0), // Update Total
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At

@@ -12,7 +12,4 @@ export const participants = pgTable("participants", {
   birth_place: text("birth_place"), // Birth Place
   birth_date: date("birth_date", { mode: "string" }), // Birth Date
   religion: text("religion"), // Religion
-  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
-  updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
-  deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At
 });

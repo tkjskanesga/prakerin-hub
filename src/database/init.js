@@ -15,10 +15,12 @@ const configdb = {
   password: process.env?.DB_PASSWORD,
   database: process.env?.DB_DATABASE || "taskit",
   max: toNumberInt(process.env?.DB_CLIENT_MAX),
-  ssl: !!process.env?.DB_ENABLESSL
+  ssl: !!process.env?.DB_SSL_ENABLE
     ? {
         rejectUnauthorized: true,
-        ca: process.env?.DB_CA_CERT,
+        ca: process.env?.DB_SSL_CA || undefined,
+        cert: process.env?.DB_SSL_CERT || undefined,
+        key: process.env?.DB_SSL_KEY || undefined,
       }
     : undefined,
 };

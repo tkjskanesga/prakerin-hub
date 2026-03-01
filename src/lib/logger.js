@@ -2,7 +2,12 @@ import "./dotenv";
 import pino from "pino";
 
 const logger = pino({
-  level: process.env.APP_DEBUG === "silent" ? "silent" : process.env.APP_DEBUG === "true" ? "debug" : "info",
+  level:
+    process.env.APP_DEBUG === "silent"
+      ? "silent"
+      : process.env.APP_DEBUG === "true"
+        ? "debug"
+        : "info",
   redact: {
     paths: [
       "password",

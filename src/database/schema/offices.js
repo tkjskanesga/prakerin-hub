@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 
 export const offices = pgTable("offices", {
   id: uuid("id").primaryKey().defaultRandom(), // Office ID
@@ -13,6 +13,7 @@ export const offices = pgTable("offices", {
   website: text("website"), // Office Website
   verify: boolean("verify").default(false), // Office Verify By Admin Platform
   verified_at: timestamp("verified_at", { withTimezone: true }), // When Office Verified
+  update_total: integer("update_total").default(0), // Update Total
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(), // Created At
   updated_at: timestamp("updated_at", { withTimezone: true }), // Updated At
   deleted_at: timestamp("deleted_at", { withTimezone: true }), // Deleted At

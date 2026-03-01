@@ -9,6 +9,4 @@ const db = drizzle(pool, {
   schema,
 });
 
-console.log("Daftar Schema:", Object.keys(schema));
-
 export default db;

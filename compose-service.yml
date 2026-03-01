@@ -1,70 +1,97 @@
 # Docker For Sevices
 services:
+  # Redis - Cacher
+  redis:
+    image: redis:8.4-alpine
+    restart: unless-stopped
+    container_name: services-prakerinhub-app-redis
+    ports:
+      - "7476:7476"
+    volumes:
+      - ./testing/certs:/tls:ro
+    command: >
+      redis-server --tls-port 7476 --port 0
+      --tls-cert-file /tls/server.crt
+      --tls-key-file /tls/server.key
+      --tls-ca-cert-file /tls/ca.crt
+      --tls-auth-clients yes
+    networks:
+      - services-prakerinhub-app
+
   # Postgres - Database
   database:
     image: postgres:18-alpine
     restart: unless-stopped
-    container_name: services-laporanpkl-app-postgres
+    container_name: services-prakerinhub-app-postgres
+    # command: > # For Linux/MacOS
+    #   -c ssl=on
+    #   -c ssl_cert_file=/etc/postgresql/certs/server.crt
+    #   -c ssl_key_file=/etc/postgresql/certs/server.key
+    #   -c ssl_ca_file=/etc/postgresql/certs/ca.crt
+    entrypoint: ["/bin/sh", "/usr/local/bin/init-ssl.sh"] # For Windows
     environment:
-      - "POSTGRES_USER=laporanpkl"
-      - "POSTGRES_PASSWORD=laporanpkl"
-      - "POSTGRES_DB=laporanpkl"
+      - "POSTGRES_USER=prakerinhub"
+      - "POSTGRES_PASSWORD=prakerinhub"
+      - "POSTGRES_DB=prakerinhub"
     ports:
       - 7477:5432
     volumes:
-      - postgres-data-laporanpkl:/var/lib/postgresql/data
+      - postgres-data-prakerinhub:/var/lib/postgresql/data
+      # - ./testing/certs:/etc/postgresql/certs:ro # Linux/MacOS
+      - ./testing/certs:/mnt/certs_root/:ro # For Windows
+      - ./compose-service-sslpg.sh:/usr/local/bin/init-ssl.sh # For Windows
     networks:
-      - services-laporanpkl-app
+      - services-prakerinhub-app
 
   # Pgadmin - Database GUI
   pgadmin:
     image: dpage/pgadmin4:9.9
     restart: always
-    container_name: services-laporanpkl-app-pgadmin
+    container_name: services-prakerinhub-app-pgadmin
     environment:
-      - "PGADMIN_DEFAULT_EMAIL=laporanpkl@laporanpkl.id"
-      - "PGADMIN_DEFAULT_PASSWORD=laporanpkl"
+      - "PGADMIN_DEFAULT_EMAIL=prakerinhub@prakerinhub.id"
+      - "PGADMIN_DEFAULT_PASSWORD=prakerinhub"
     ports:
       - 7478:80
     volumes:
-      - pgadmin-data-laporanpkl:/var/lib/pgadmin/
+      - pgadmin-data-prakerinhub:/var/lib/pgadmin/
     networks:
-      - services-laporanpkl-app
+      - services-prakerinhub-app
 
   # Minio - Object Storage
   minio:
     image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1
     restart: always
-    container_name: services-laporanpkl-app-minio
+    container_name: services-prakerinhub-app-minio
     environment:
-      - "MINIO_ROOT_USER=laporanpkl"
-      - "MINIO_ROOT_PASSWORD=laporanpkl"
-      - "MINIO_DEFAULT_BUCKETS=laporanpkl-bucket"
+      - "MINIO_ROOT_USER=prakerinhub"
+      - "MINIO_ROOT_PASSWORD=prakerinhub"
+      - "MINIO_DEFAULT_BUCKETS=prakerinhub-bucket"
     volumes:
-      - minio-data-laporanpkl:/data
+      - minio-data-prakerinhub:/data
     ports:
       - 7479:7479
       - 7480:7480
     command: server /data --address ":7479" --console-address ":7480"
     networks:
-      - services-laporanpkl-app
+      - services-prakerinhub-app
 
   # Gotenberg - PDF Generator
   gotenberg:
     image: gotenberg/gotenberg:8.26.0
     restart: unless-stopped
-    container_name: services-laporanpkl-app-gotenberg
+    container_name: services-prakerinhub-app-gotenberg
     ports:
       - 7481:3000
     networks:
-      - services-laporanpkl-app
+      - services-prakerinhub-app
 
 # Volumes
 volumes:
-  postgres-data-laporanpkl:
-  pgadmin-data-laporanpkl:
-  minio-data-laporanpkl:
+  postgres-data-prakerinhub:
+  pgadmin-data-prakerinhub:
+  minio-data-prakerinhub:
 
 # Networks
 networks:
-  services-laporanpkl-app:
+  services-prakerinhub-app:

@@ -66,3 +66,6 @@ seeder.json
 /testing/suratpengajuanpkl_final.docx
 /testing/suratpengajuanpkl_final.pdf
 /testing/suratpengajuanpkl_final*
+/testing/certs/*.crt
+/testing/certs/*.key
+/testing/certs/*.csr

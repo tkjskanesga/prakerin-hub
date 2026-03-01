@@ -6,7 +6,7 @@ export const usersRoleEnum = pgEnum("users_role", globalVariable.db.role_users);
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(), // User ID
-  institutions_id: uuid("institutions_id").references(() => institutions.id), // Institutions ID
+  institution_id: uuid("institutions_id").references(() => institutions.id), // Institutions ID
   fullname: text("fullname").notNull(), // Fullname
   picture_url: text("picture_url").default(null), // Profile Picture URL
   username: text("username").unique().notNull(), // Unique Username

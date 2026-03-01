@@ -2,28 +2,48 @@ import Redis from "ioredis";
 import memjs from "memjs";
 import logger from "./logger";
 
-const host = (process.env.CACHER_HOST || null);
+const host = process.env.CACHER_HOST || null;
 const type = (process.env.CACHER_TYPE || "redis").toLowerCase();
-const port = process.env.CACHER_PORT || (type === "memcache" ? 11211 : 6379);
-const useSsl = process.env.CACHER_SSL === "true";
+const port = Number(process.env.CACHER_PORT || (type === "memcache" ? 11211 : 6379));
+const useSsl = process.env.CACHER_SSL_ENABLE === "true";
+const username = process.env.CACHER_USERNAME || undefined;
+const password = process.env.CACHER_PASSWORD || undefined;
+const keepAlive = Number(process.env.CACHER_KEEPALIVE || "30000");
+const db = Number(process.env.CACHER_DB || "0");
 
 let client = null;
 let isEnabled = false;
 
 if (host) {
   try {
+    let sslConnection = {}
+    if(useSsl) {
+      sslConnection = {
+        rejectUnauthorized: true,
+        ca: process.env?.CACHER_SSL_CA || undefined,
+        cert: process.env?.CACHER_SSL_CERT || undefined,
+        key: process.env?.CACHER_SSL_KEY || undefined,
+      }
+    }
     if (type === "redis" || type === "valkey") {
       client = new Redis({
         host: host,
         port: port,
-        tls: useSsl ? {} : undefined,
+        db: db,
+        keepAlive: keepAlive,
+        username: username,
+        password: password,
+        tls: useSsl ? sslConnection : undefined,
         retryStrategy: (times) => Math.min(times * 50, 2000),
-        connectTimeout: 5000, 
+        connectTimeout: 5000,
       });
       isEnabled = true;
     } else if (type === "memcache") {
       client = memjs.Client.create(`${host}:${port}`, {
-        tls: useSsl ? {} : undefined
+        password: password,
+        username: username,
+        keepAlive: keepAlive,
+        tls: useSsl ? sslConnection : undefined,
       });
       isEnabled = true;
     }
